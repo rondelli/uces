@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Presentation</title>
+    <link href="favicon.png" rel="icon" type="image/png"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body, p { font-family: 'Nunito'; font-size: 21px; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+# SQL – 2nd Part
+
+## Bases de Datos II ― UCES
+
+<br/>
+<br/>
+
+### Prof. Hernán Rondelli
+
+### https://rondelli.github.io/uces/db2/sql-2.html
+
+---
+
+class: center, middle
+# order by
+
+---
+
+## order by
+
+```sql
+select *
+from   empleade
+order  by salario;
+```
+
+```sql
+select *
+from   empleade
+order  by salario desc;
+```
+
+```sql
+select *
+from   empleade
+order  by salario asc;
+```
+
+```sql
+select *
+from   empleade
+order  by apellido, nombre;
+```
+
+---
+
+class: center, middle
+# Subqueries
+
+---
+
+## select … where … (select …)
+
+```sql
+select nombre, salario
+from empleade
+where salario >= (
+*   select salario
+*   from empleade
+*   where legajo = 626
+);
+```
+
+---
+
+## all
+
+```sql
+select nombre, apellido
+from empleade
+where salario > all (
+    select salario
+    from empleade
+    where departamento = 'sistemas'
+);
+```
+
+---
+
+## in
+
+```sql
+select nombre, apellido, departamento
+from  empleade
+where departamento in (
+    select departamento
+    from proyecto
+    where fecha_inicio >= '2011-06-26'
+);
+```
+
+---
+
+## exists
+
+```sql
+select e1.nombre, e1.apellido
+from empleade e1
+where not exists (
+    select *
+    from empleade e2
+    where departamento = 'sistemas' and e2.salario >= e1.salario
+);
+```
+
+---
+
+class: center, middle
+# Funciones de agregación
+
+---
+
+## Funciones de agregación…
+
+```sql
+select count(*) from empleade;
+```
+
+```sql
+select count(nombre) from empleade;
+```
+
+```sql
+select count(distinct nombre) from empleade;
+```
+
+---
+
+## …Funciones de agregación
+
+```sql
+select sum(salario) from empleade;
+```
+
+```sql
+select max(salario) from empleade;
+```
+
+```sql
+select min(salario) from empleade;
+```
+
+```sql
+select avg(salario) from empleade;
+```
+
+```sql
+select max(salario), min(salario), avg(salario) from empleade;
+```
+
+---
+
+class: center, middle
+# group by
+
+---
+
+## group by
+
+```sql
+select   departamento, count(*), avg(salario)
+from     empleade
+group by departamento;
+```
+
+```sql
+select   departamento, count(*), salario
+from     empleade
+group by departamento, salario;
+```
+
+```sql
+select   departamento, count(*), avg(salario)
+from     empleade
+where    departamento = 'sistemas' or departamento = 'finanzas'
+group by departamento;
+```
+
+---
+
+## having
+
+```sql
+select   departamento, avg(salario) 
+from     empleade 
+group by departamento 
+having   count(*) > 10;
+```
+
+???
+
+**having** sólo puede hacer referencia a funciones de agregación ó a campos que estén en el **group by**.
+
+---
+
+## having ó where 🤔
+
+```sql
+select   departamento, count(*)
+from     empleade
+where    salario >= 40000
+group by departamento 
+having   count(*) > 10;
+```
+
+```sql
+select  departamento, count(*) 
+from    empleade 
+where   salario >= 40000 and departamento in (
+*       select   departamento
+*       from     empleade
+*       group by departamento
+*       having   count(*) > 10
+)
+group by departamento;  
+```
+
+---
+
+class: center, middle
+# Operaciones de conjuntos
+
+---
+
+## Operaciones de conjuntos
+### union [all]
+
+```sql
+*select nombre, apellido from docente
+
+union
+
+*select nombre, apellido from alumne;
+```
+
+```sql
+select nombre, apellido from docente
+union all
+select nombre, apellido from alumne;
+```
+
+---
+
+## Operaciones de conjuntos
+### intersect [all]
+
+```sql
+select nombre, apellido from docente
+intersect
+select nombre, apellido from alumne;
+```
+
+```sql
+select nombre, apellido from docente
+intersect all
+select nombre, apellido from alumne;
+```
+
+---
+
+## Operaciones de conjuntos
+### except [all]
+
+```sql
+select nombre, apellido from docente
+except
+select nombre, apellido from alumne;
+```
+
+```sql
+select nombre, apellido from docente
+except all
+select nombre, apellido from alumne;
+```
+
+---
+
+class: center,middle
+# One more thing…
+
+---
+
+class: center, middle
+# División
+
+---
+
+## División
+
+_Empleades que trabajan en todos los proyectos._
+
+```sql
+select distinct legajo
+from trabaja_en t1
+where not exists (
+    select 1
+    from proyecto p
+    where not exists (
+        select 1
+        from trabaja_en t2
+        where t2.legajo = t1.legajo and t2.proyecto_id = p.proyecto_id
+    )
+);
+```
+
+---
+
+## Cómo **no** hacer la división en el parcial
+
+
+_Empleades que trabajan en todos los proyectos._
+
+```sql
+select legajo
+from trabaja_en
+group by legajo
+having count(distinct proyecto_id) = (
+    select count(distinct proyecto_id) from proyecto
+);
+```
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+**⚠️ No hacer la división de esta forma en el parcial!**
+
+???
+
+## Cómo <span style="color:red">**no**</span> hacer la división en el parcial
+
+// Empleades que trabajan en todos los proyectos que comenzaron después del 26 de junio de 2011.
+
+// select legajo
+// from trabaja\_en
+// where proyecto\_id in (select proyecto\_id from proyecto where fecha\_inicio >= '2011-06-26')
+// group by legajo
+// having count(distinct proyecto\_id) = (select count(distinct proyecto\_id) from proyecto where fecha\_inicio >= '2021-06-26');
+
+---
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+## Gracias!
+
+	</textarea>
+
+    <script src="../out/remark.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <script type="text/javascript">
+      var options = {
+		  ratio: '16:9',
+		  highlightLines:'true'
+	  };
+      var renderMath = function() {
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+              ]});
+        });
+      }
+      var slideshow = remark.create(options, renderMath);
+    </script>
+  </body>
+</html>
