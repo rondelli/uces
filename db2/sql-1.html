@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Presentation</title>
+    <link href="favicon.png" rel="icon" type="image/png"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body, p { font-family: 'Nunito'; font-size: 21px; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+# SQL (Structured Query Language)
+
+## Bases de Datos II ― UCES
+
+<br/>
+<br/>
+
+### Prof. Hernán Rondelli
+
+### https://rondelli.github.io/uces/db2/sql-1.html
+
+---
+
+# SQL
+
+- Sequel /ˈsiːkw(ə)l/
+
+- Standard
+
+- Declarative language
+
+---
+
+# Para qué se usa?
+
+|                               |       |                         |
+|------------------------------:|:-----:|:------------------------|
+| Crear/modificar/borrar tablas | **→**| **Data Definition Language** |
+|                               |                                |
+| Input/output de datos         | **→** | **Data Manipulation Language** |
+|                               |                                |
+| Administrar usuaries          | **→** | **Data Control Language** |
+|                               |                                |
+| Administrar transacciones     | **→** | **Transaction Control Language** |
+|                               |                                |
+| Administrar sesiones          | **→** | **Session Control Language** |
+
+---
+
+class: center, middle
+# select
+
+---
+
+class: center, middle
+# Nada que ver con σ!
+
+---
+
+## select
+
+```sql
+select * from alumne;
+```
+
+```sql
+select nombre from alumne;
+```
+
+```sql
+select nombre, apellido from alumne;
+```
+
+```sql
+select legajo, nombre, apellido from alumne;
+```
+
+---
+
+## select
+
+```sql
+select c1, c2, …, cN from tabla;
+```
+
+<br/>
+
+c1, c2, …, cN == "operador Π del álgebra relacional"
+
+---
+
+class: center, middle
+# where
+
+---
+
+## where
+
+```sql
+select * from alumne where legajo = 626;
+```
+
+```sql
+select nombre, apellido from alumne where localidad = 'San Isidro';
+```
+
+```sql
+select distinct nombre, apellido from alumne where localidad = 'San Isidro';
+```
+
+```sql
+select legajo from alumne where apellido = 'Olave';
+```
+
+```sql
+select legajo from alumne where f_inscripción >= '2011-06-26';
+```
+
+```sql
+select * from alumne where '2011-06-26' <= f_inscripción and f_inscripción <= current_date;
+```
+
+---
+
+## where
+
+```sql
+select * from tabla where condición;
+```
+
+<br/>
+
+where == "operador σ del álgebra relacional"
+
+---
+
+class: center, middle
+# from
+
+---
+
+## from
+
+```sql
+select * from alumne;
+```
+
+**Producto cartesiano**
+
+```sql
+select * from alumne, cursa;
+```
+
+**Producto cartesiano con join condition**
+
+```sql
+select * from alumne, cursa where alumne.legajo = cursa.legajo;
+```
+
+**Producto cartesiano con join condition, usando alias**
+
+```sql
+select * from alumne a, cursa c where a.legajo = c.legajo;
+```
+
+```sql
+select * from alumne a, cursa c, materia m where a.legajo = c.legajo and c.código = m.código;
+```
+
+---
+
+class: center, middle
+# No usar la sintaxis <span style=color:red>join on</span> en el parcial!
+
+---
+
+class: center, middle
+# Tablas
+
+---
+
+## Tablas
+
+**Create tables**
+
+```sql
+create table alumne (legajo int, nombre text, apellido text);
+create table materia (cod int, nombre text);
+create table cursa (legajo int, cod_mat int);
+```
+
+**Add primary key's**
+
+```sql
+alter table alumne add constraint alumne_pk primary key (legajo);
+alter table materia add constraint materia_pk primary key (cod);
+alter table cursa add constraint cursa_pk primary key (legajo, cod_mat);
+```
+
+**Add foreign key's**
+
+```sql
+alter table cursa add constraint cursa_legajo_fk foreign key (legajo) references alumne (legajo);
+alter table cursa add constraint cursa_cod_mat_fk foreign key (cod_mat) references materia (cod);
+```
+
+---
+
+class: center, middle
+# insert, update, delete
+
+---
+
+## insert
+
+```sql
+insert into alumne values (624, 'Cristina', 'Kirchner');
+```
+
+---
+
+## update
+
+```sql
+insert into alumne values (625, 'Arnold', 'Shwarseneger'); -- Cómo era el apellido? 🤔
+update alumne set apellido = 'Schwarzenegger' where legajo = 625;
+```
+
+<br/>
+⚠️
+```sql
+update alumne set apellido = 'Schwarzenegger'; -- No!!! 🙀
+```
+
+---
+
+## delete
+
+```sql
+delete from materia where código = 629;
+```
+
+<br/>
+⚠️
+```sql
+delete from materia; -- No!!! 🙀
+```
+
+---
+
+class: center, middle
+# Bases de datos
+
+---
+
+## Bases de datos
+
+**Crear**
+
+```sql
+create database bedelía;
+```
+
+**Borrar**
+
+```sql
+drop database bedelía;
+drop database bedelía; -- ❌ error!
+```
+
+```sql
+drop database bedelía;
+drop database if exists bedelía; -- ✅ okay
+```
+
+---
+
+## PostgreSQL
+
+```
+*$ psql -U postgres
+*psql (14.7)
+*Type "help" for help.
+*
+*postgres=#
+```
+
+---
+
+class: center, middle
+# Demo
+
+---
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+	</textarea>
+
+    <script src="../out/remark.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <script type="text/javascript">
+      var options = {
+		  ratio: '16:9',
+		  highlightLines:'true'
+	  };
+      var renderMath = function() {
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+              ]});
+        });
+      }
+      var slideshow = remark.create(options, renderMath);
+    </script>
+  </body>
+</html>
