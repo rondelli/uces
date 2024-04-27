@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Presentation</title>
+    <link href="favicon.png" rel="icon" type="image/png"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body, p { font-family: 'Nunito'; font-size: 21px; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+# Stored Procedures & Triggers
+
+## Bases de Datos II ― UCES
+
+<br/>
+<br/>
+
+### Prof. Hernán Rondelli
+
+### https://rondelli.github.io/uces/db2/sp.html
+
+---
+
+class: center, middle
+# Stored Procedures
+
+---
+
+## Stored Procedures
+
+**/stɔːd prəˈsiːdʒəz/**
+
+- Lógica dentro de la base de datos
+- **Funciones** que se ejecutan en el server
+- Procedural Language: variables, `if`, `while`, `for`, …
+- PL in PostgreSQL:
+ - PL/pgSQL
+ - PL/TCL
+ - PL/Perl
+ - PL/Python
+
+---
+
+class: center, middle
+# PL/pgSQL
+
+---
+
+## PL/pgSQL
+
+- PL (Procedural Language) by default
+- **Oracle PL/SQL** Clone
+- Basado en Ada
+
+---
+
+## PL/pgSQL
+
+### Estructura de una función
+
+```sql
+create function nombre(par_1 tipo_1, par_2 tipo_2,…, par_n tipo_n) returns tipo_r as $$
+declare
+    variable_1 tipo_1;
+    …
+    variable_m tipo_m;
+begin
+    /* statements */
+    return resultado_tipo_r;
+end;
+$$ language plpgsql;
+```
+
+---
+
+## PL/pgSQL…
+
+### hello()
+
+```sql
+create function hello() returns void as $$
+begin
+    raise notice 'hello, world!';
+end;
+$$ language plpgsql;
+```
+
+### suma(a, b)
+
+```sql
+create or replace function suma(a int, b int) returns int as $$
+declare
+    c int;
+begin
+    c := a + b;
+    return c;
+end;
+$$ language plpgsql;
+```
+
+---
+
+## …PL/pgSQL
+
+### hello()
+
+```sql
+postgres=# select hello();
+NOTICE:  hello, world!
+ hello
+-------
+
+(1 row)
+```
+
+### suma(a, b)
+
+```sql
+postgres=# select suma(2, 3);
+ suma
+------
+    5
+(1 row)
+```
+
+---
+
+## PL/pgSQL
+
+**Declaration**
+
+```sql
+legajo     int;
+nombre     text;
+fecha      date;
+estudiante alumne%rowtype;
+código     materia.cod%type;
+fila       record;
+```
+
+**Assignment**
+
+```sql
+variable := valor;
+```
+
+---
+
+## PL/pgSQL
+
+**if**
+
+```sql
+if condición then
+    /* statements */
+else
+    /* statements */
+end if;
+```
+
+---
+
+## PL/pgSQL
+
+**while**
+
+```sql
+while condición loop
+    /* statements */
+end loop;
+```
+
+**for (integer)**
+
+```sql
+for i in 1..n loop
+    /* statements */
+end loop;
+```
+
+**for (query)**
+
+```sql
+for v in select * from tabla loop
+    /* statements */
+end loop;
+```
+
+---
+
+## PL/pgSQL
+
+**Extras**
+
+- `select into variable […]`
+- `found`, `row_count`
+- existen **banda** de cosas más…
+
+```sql
+…
+declare
+    nombre_completo text;
+    resultado record;
+begin
+    select * into resultado from alumne where legajo = legajo_buscado;
+
+    if not found then
+        raise 'el legajo % es inválido', legajo_buscado;
+    end if;
+
+    nombre_completo := resultado.nombre || ' ' || resultado.apellido;
+…
+```
+
+---
+
+class: center, middle
+# Triggers
+
+---
+
+## Triggers
+
+**/ˈtrɪɡəz/**
+
+**Función que se ejecuta automáticamente**
+
+```python
+for event in database:
+    if condition:
+        do action
+```
+
+- Mover lógica al DBMS
+- Trabajar con constraints
+
+---
+
+## Triggers
+
+**Eventos**
+
+```sql
+insert on tabla
+delete on tabla
+update on tabla
+```
+
+**Activación**
+
+```sql
+before | after | instead of evento
+```
+
+**Row-level**
+
+```sql
+for each row
+```
+
+**Statement-level**
+
+```sql
+for each statement
+```
+
+---
+
+## Triggers
+
+**Implementaciones**
+
+- PostgreSQL: full standard
+- SQLite: row-level only
+- MySQL: row-level only, más limitaciones
+
+---
+
+## PostgreSQL Triggers
+
+1. Necesitamos una función que implemente el comportamiento
+ - Procedural Language: variables, `if`, `while`, `for`, …
+ - **PL/pgSQL**, PL/TCL, PL/Perl, PL/Python, …
+2. Definimos el trigger que use la función creada
+
+---
+
+## PostgreSQL Triggers
+
+**Función sin parámetros que devuelve trigger**
+
+```sql
+create function función_del_trigger() returns trigger as $$
+declare
+    variable_1 tipo_1;
+    …
+    variable_m tipo_m;
+begin
+    /* statements */
+    return new;
+end;
+$$ language plpgsql;
+```
+
+**Creación del trigger**
+
+```sql
+create trigger nombre_del_trigger
+after insert on tabla
+for each row
+execute procedure función_del_trigger();
+```
+
+???
+
+Eliminar
+
+drop trigger nombre\_del\_trigger on tabla;
+
+---
+
+## PostgreSQL Triggers
+
+### Extras
+
+```sql
+create table alumne(legajo int, nombre text, apellido text);
+insert into alumne values (629, 'David', 'Banner');
+update alumne set nombre = 'Bruce' where legajo = 629;
+```
+
+**Dentro de la función del trigger**
+- `new`
+ - `new.legajo`
+ - `new.nombre`
+ - `new.apellido`
+- `old`
+ - `old.legajo`
+ - `old.nombre`
+ - `old.apellido`
+
+---
+
+class: center, middle
+# Ejemplo
+
+---
+
+**Trigger function**
+
+```sql
+create or replace function cambio_de_nombre() returns trigger as $$
+begin
+    if new.nombre != old.nombre then
+        insert into alerta values (old.id, old.nombre);
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+```
+
+**Trigger**
+
+```sql
+create trigger cambio_de_nombre_trg
+before update on usuarie
+for each row
+execute procedure cambio_de_nombre();
+```
+
+**Example**
+
+```sql
+update usuarie set nombre = 'Juan Domingo Perón' where id = 626;
+```
+
+---
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+	</textarea>
+
+    <script src="../out/remark.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <script type="text/javascript">
+      var options = {
+		  ratio: '16:9',
+		  highlightLines:'true'
+	  };
+      var renderMath = function() {
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+              ]});
+        });
+      }
+      var slideshow = remark.create(options, renderMath);
+    </script>
+  </body>
+</html>
