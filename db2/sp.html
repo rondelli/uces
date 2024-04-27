@@ -71,7 +71,7 @@ class: center, middle
 
 ### Estructura de una función
 
-```sql
+```pgsql
 create function nombre(par_1 tipo_1, par_2 tipo_2,…, par_n tipo_n) returns tipo_r as $$
 declare
     variable_1 tipo_1;
@@ -90,7 +90,7 @@ $$ language plpgsql;
 
 ### hello()
 
-```sql
+```pgsql
 create function hello() returns void as $$
 begin
     raise notice 'hello, world!';
@@ -100,7 +100,7 @@ $$ language plpgsql;
 
 ### suma(a, b)
 
-```sql
+```pgsql
 create or replace function suma(a int, b int) returns int as $$
 declare
     c int;
@@ -142,7 +142,7 @@ postgres=# select suma(2, 3);
 
 **Declaration**
 
-```sql
+```pgsql
 legajo     int;
 nombre     text;
 fecha      date;
@@ -153,7 +153,7 @@ fila       record;
 
 **Assignment**
 
-```sql
+```pgsql
 variable := valor;
 ```
 
@@ -163,7 +163,7 @@ variable := valor;
 
 **if**
 
-```sql
+```pgsql
 if condición then
     /* statements */
 else
@@ -185,7 +185,7 @@ end loop;
 
 **for (integer)**
 
-```sql
+```psql
 for i in 1..n loop
     /* statements */
 end loop;
@@ -193,7 +193,7 @@ end loop;
 
 **for (query)**
 
-```sql
+```pgsql
 for v in select * from tabla loop
     /* statements */
 end loop;
@@ -209,7 +209,7 @@ end loop;
 - `found`, `row_count`
 - existen **banda** de cosas más…
 
-```sql
+```pgsql
 …
 declare
     nombre_completo text;
@@ -302,7 +302,7 @@ for each statement
 
 **Función sin parámetros que devuelve trigger**
 
-```sql
+```pgsql
 create function función_del_trigger() returns trigger as $$
 declare
     variable_1 tipo_1;
@@ -361,7 +361,7 @@ class: center, middle
 
 **Trigger function**
 
-```sql
+```pgsql
 create or replace function cambio_de_nombre() returns trigger as $$
 begin
     if new.nombre != old.nombre then
@@ -395,7 +395,9 @@ class: center, middle
 
 		</textarea>
 		<script src="../out/remark.js"></script>
+		<!--
 		<script src="../out/MathJax-2.4-latest/MathJax.js"></script>
+		-->
 		<script type="text/javascript">
 			var slideshow = remark.create({
 				ratio: '16:9',
