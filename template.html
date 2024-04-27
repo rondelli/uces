@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Presentation</title>
+		<link href="favicon.png" rel="icon" type="image/png"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<style type="text/css">
+			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+			@import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+			body, p { font-family: 'Nunito'; font-size: 21px; }
+			h1, h2, h3 {
+				font-family: 'Yanone Kaffeesatz';
+				font-weight: normal;
+			}
+			.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+		</textarea>
+		<script src="../out/remark.js"></script>
+		<script src="../out/MathJax-2.4-latest/MathJax.js"></script>
+		<script type="text/javascript">
+			var slideshow = remark.create({
+				ratio: '16:9',
+				highlightLines:'true'
+			});
+
+			MathJax.Hub.Config({
+				extensions: ["tex2jax.js"],
+				jax: ["input/TeX","output/SVG"],
+				tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+			});
+
+			MathJax.Hub.Configured();
+		</script>
+	</body>
+</html>
