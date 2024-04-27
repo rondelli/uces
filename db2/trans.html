@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Presentation</title>
+    <link href="favicon.png" rel="icon" type="image/png"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body, p { font-family: 'Nunito'; font-size: 21px; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+# Transacciones
+
+## Bases de Datos II ― UCES
+
+<br/>
+<br/>
+
+### Prof. Hernán Rondelli
+
+### https://rondelli.github.io/uces/db2/trans.html
+
+---
+
+class: center, middle
+# Transacciones — Para qué sirven?
+
+---
+
+## Transacciones — Para qué sirven?
+
+- Acceso concurrente a los datos
+- Resistencia a fallas
+
+---
+
+## Acceso concurrente 1…
+
+### access → read, modify, write
+
+Supongamos dos modificaciones simultáneas
+
+**Acceso A**
+
+```sql
+update caja_de_ahorro set saldo = saldo + 1000 where número_de_cuenta = 626;
+```
+
+**Acceso B**
+
+```sql
+update caja_de_ahorro set saldo = saldo + 2000 where número_de_cuenta = 626;
+```
+
+<br/>
+
+Si le cliente tenía $10000 en su cuenta, cuánto dinero tiene ahora?
+
+---
+
+## …Acceso concurrente 1
+
+### access → read, modify, write
+
+<br/>
+
+| Acceso A        | <span style=color:white>666</span> |  Acceso B |
+|:---------------:|-|:---------------:|
+| ↓               | | ↓               |
+| `read(saldo)`   | |                 | 
+| `saldo += 1000` | |                 | 
+|                 | | `read(saldo)`   | 
+|                 | | `saldo += 2000` |
+| `write(saldo)`  | |                 | 
+|                 | | `write(saldo)`  | 
+
+???
+
+Esto se conoce como _lost update problem_.
+
+---
+
+## Acceso concurrente 2…
+
+### access → read, modify, write
+
+Supongamos dos accesos simultáneos
+
+**Acceso A**
+
+```sql
+insert into alquiler select * from reserva where fecha = now()::date;
+delete from reserva where fecha = now()::date;
+```
+
+**Acceso B**
+
+```sql
+select count(*) from reserva;
+select count(*) from alquiler;
+```
+
+Observación
+
+```sql
+now()::date == current_date
+```
+
+---
+
+## …Acceso concurrente 2
+
+### access → read, modify, write
+
+| Acceso A                     | <span style=color:white>666</span> |  Acceso B  |
+|------------------------------|------------------------------------|:----------:|
+| .center[↓]                   | |  ↓ |
+| `insert into alquiler`       | |
+| `select * from reserva`      | |                               
+| `where fecha = now()::date;` | |                               
+|                              | | .left[`select count(*) from reserva;`]
+|                              | | .left[`select count(*) from alquiler;`]
+| `delete from reserva`        | |                              
+| `where fecha = now()::date;` | |                              
+
+???
+
+Esto se conoce como _incorrect summary problem_.
+
+---
+
+## Resistencia a fallas
+
+Estamos procesando los alquileres y las reservas…
+
+```sql
+insert into alquiler select * from reserva where fecha = current_date;
+delete from reserva where fecha = current_date;
+```
+
+pero Edenor nos corta la luz justo antes del `delete`!!! 😿
+
+---
+
+# Transacción
+
+_Es una secuencia de operaciones SQL que se tratan como una unidad_
+
+- Cada transacción se ejecuta aisladamente
+- Todo ó nada: se ejecuta completamente, ó no se ejecuta nada
+
+---
+
+class: center, middle
+# Propiedades ACID
+
+---
+
+## Propiedades ACID
+
+- Atomicity
+- Consistency
+- Isolation
+- Durability
+
+---
+
+## Atomicity
+
+- **Todo ó nada:** se ejecuta completamente, ó no se ejecuta nada
+- La transacción siempre termina en `commit` ó en `rollback`
+
+|            |       |
+|-----------:|:-----:|:---------------------------------------
+| `commit`   | **→** | la transacción se completó exitosamente
+| `rollback` | **→** | undo de una transacción parcial
+
+---
+
+## Consistency
+
+Una transacción **nunca** deja a la base de datos en un estado **inconsistente**
+
+- Cuando una transacción comienza, la base de datos está en un estado consistente
+- Cuando una transacción termina, se garantiza que la base de datos está en un estado consistente
+
+---
+
+## Isolation
+
+- Cada transacción **no** vé lo que otra transacción está haciendo
+- Las transacciones se procesan concurrentemente
+- Los resultados de una transacción deben ser los mismos que la ejecución secuencial de las operaciones
+
+**Serialización:** Las operaciones se pueden entrelazar pero la ejecución debe ser equivalente a _algún_ orden secuencial de todas las transacciones 
+
+---
+
+## Ejemplo de serialización
+
+**T1**
+
+```sql
+update caja_de_ahorro set saldo = saldo + 1000 where número_de_cuenta = 626;
+```
+
+**T2**
+
+```sql
+update caja_de_ahorro set saldo = saldo + 2000 where número_de_cuenta = 626;
+```
+
+<br/>
+
+✅  T1, T2 
+
+✅  T2, T1 
+
+---
+
+## Durability
+
+Las operaciones sobre la base de datos **no deben** cambiar después de que se completó exitosamente la transacción
+
+---
+
+class: center, middle
+# Isolation Levels
+
+---
+
+## Isolation
+
+- Cada transacción **no** vé lo que otra transacción está haciendo
+- Las transacciones se procesan **concurrentemente**
+- Los resultados de una transacción **deben ser los mismos** que la ejecución secuencial de las operaciones
+
+**Serialización:** Las operaciones se pueden entrelazar pero la ejecución debe ser equivalente a _algún_ orden secuencial de todas las transacciones 
+
+✅  T1, T2, T3, T7, T10, T8, T9, T6, T4, T5
+
+**Observación: es válido sólo para serializable**
+
+---
+
+## Isolation Levels (por transacción)
+
+Weaker to Stronger:
+
+| <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> | 
+|:----------------------|:-:|----------------------------------
+| <span style=color:red>1. `read uncommitted`</span> |  | ↓  Overhead
+| <span style=color:orange>2. `read committed`</span>   |  | ↑ Concurrency
+| <span style=color:#F4BC1C>3. `repeatable read`</span>  | | ↓ Consistencia
+
+
+| <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> | 
+|:----------------------|-|----------------------------------
+| <span style=color:green>4. `serializable`</span>     | | ➕ Overhead
+|                       | | ➖ Concurrency
+|                       | | 100% Consistencia
+
+---
+
+## Dirty Read
+
+Cuando una transacción lee un valor escrito por una transacción `uncommitted`
+
+**T1**
+
+```sql
+-- saldo → 10000
+begin;
+update caja_de_ahorro set saldo = saldo + 5000 where número_de_cuenta = 626;
+*-- saldo → 15000
+-- acá podemos tener un rollback
+commit;
+```
+
+**T2 (`read uncommitted`)**
+
+```sql
+begin;
+…
+*select saldo from caja_de_ahorro where número_de_cuenta = 626;
+commit;
+```
+
+---
+
+## read uncommitted
+
+La transacción puede tener valores **dirty reads**
+
+```sql
+begin;
+set transaction isolation level read uncommitted;
+/* operaciones */
+commit;
+```
+
+---
+
+## read committed
+
+La transacción **no** puede tener valores dirty reads **(todavía no garantiza serialización)**
+
+**T1**
+
+```sql
+begin;
+update cambio set compra = 25.75 where moneda = 'Dolar';
+commit;
+```
+
+**T2**
+
+```sql
+begin;
+set transaction isolation level read committed;
+select max(compra) from cambio where moneda = 'Dolar';
+…
+select max(compra) from cambio where moneda = 'Dolar';
+commit;
+```
+
+---
+
+## repeatable read
+
+- La transacción **no** puede tener valores dirty reads
+- Un valor leído más de una vez, no puede cambiar
+- **(todavía no garantiza serialización)**
+
+**T1**
+
+```sql
+begin;
+update cambio set compra = 25.75 where moneda = 'Dolar';
+update cambio set venta = 25.95 where moneda = 'Dolar';
+commit;
+```
+
+**T2**
+
+```sql
+begin;
+set transaction isolation level repeatable read;
+select avg(compra) from cambio;
+select avg(venta) from cambio;
+commit;
+```
+
+---
+
+## repeatable read → phantom tuples
+
+- La transacción **no** puede tener valores dirty reads
+- Un valor leído más de una vez, no puede cambiar
+- **(todavía no garantiza serialización)**
+
+**T1**
+
+```sql
+begin;
+insert into cambio ["compra y venta para varias monedas"];
+commit;
+```
+
+**T2**
+
+```sql
+begin;
+set transaction isolation level repeatable read;
+select * from cambio;
+select avg(compra) from cambio;
+select max(compra) from cambio;
+commit;
+```
+
+---
+
+## read only
+
+```sql
+begin;
+set transaction read only;
+select * from materia;
+select avg(nota) from materia_aprobada where legajo = 626;
+select nombre, apellido from alumno order by apellido;
+commit;
+```
+
+---
+
+## Bibliografía
+
+Elmasri and Navathe, _Fundamentals of database systems_
+
+  - Secciones 20.1, 20.3, y 20.6
+
+---
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+	</textarea>
+
+    <script src="../out/remark.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <script type="text/javascript">
+      var options = {
+		  ratio: '16:9',
+		  highlightLines:'true'
+	  };
+      var renderMath = function() {
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+              delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+              ]});
+        });
+      }
+      var slideshow = remark.create(options, renderMath);
+    </script>
+  </body>
+</html>
