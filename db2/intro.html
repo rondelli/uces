@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Presentation</title>
+		<link href="favicon.png" rel="icon" type="image/png"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<style type="text/css">
+			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+			@import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+			body, p { font-family: 'Nunito'; font-size: 21px; }
+			h1, h2, h3 {
+				font-family: 'Yanone Kaffeesatz';
+				font-weight: normal;
+			}
+			.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+class: center, middle
+# Presentación de la materia
+
+## Bases de Datos II ― UCES
+
+<br/>
+<br/>
+
+### Prof. Hernán Rondelli
+
+### https://rondelli.github.io/uces/db2/intro.html
+
+---
+
+## Medios de comunicación
+
+  - Cuestiones administrativas, por email
+  - Avisos, por el **grupo de Telegram**
+
+---
+
+## Régimen de aprobación
+
+  - 1<sup>er</sup> parcial: **escrito**
+  - trabajo práctico: **grupal**
+  - 2<sup>do</sup> parcial: **oral**
+
+---
+
+## Bibliografía sugerida
+
+  - Silberschatz and Korth, _Database System Concepts_
+  - Ramakrishnan and Gehrke, _Database Management Systems_
+  - Elmasri and Navathe, _Fundamentals of database systems_
+  - Helman, _The science of database management_
+  - Ullman, _Principles of Database and Knowledge Base Systems_
+
+---
+
+## Programa de la materia
+
+  - SQL. Stored Procedures. Triggers
+  - Transacciones
+  - Conexión desde apps
+  - JSON. NoSQL. MongoDB
+
+|                             | |                           |
+| ---------------------------:|-|:---------------------------
+| **1<sup>er</sup> parcial**  |→| SQL. Stored Procedures. Triggers
+| **trabajo práctico**        |→| Todos los temas. Énfasis en buenas prácticas, documentación, y `git`
+| **2<sup>do</sup> parcial**  |→| Todos los temas. Énfasis en transacciones
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+_El programa completo de la materia está [aquí](https://docs.google.com/document/d/1_7ilSf-PxT4dG2yf7Z-gQgQu87r29CR7mF-BEG4y8yg/edit?usp=sharing)._
+
+---
+
+class: center, middle
+# Qué vieron en Bases de Datos I, se acuerdan algo? 😹
+
+---
+
+class: center, middle
+# Bases de Datos
+
+---
+
+## Bases de Datos
+
+_Conjunto de datos relacionados_
+
+  - DBMS (DataBase Management System)
+  - RDBMS (Relational DataBase Management System)
+  - PostgreSQL, Oracle, SQLite, MySQL, MariaDB
+  - DBA (DataBase Administrator)
+
+---
+
+## PostgreSQL
+
+  - **Unix:** Linux, FreeBSD, OpenBSD, macOS,…
+  - Clients: psql, pgweb,…
+  - Text editors: vi, VS Code,…
+  - Código: Go, C, Python, Java, PHP,…
+
+---
+
+class: center, middle
+# Virtual Machine
+
+---
+
+## VM (Virtual Machine)
+
+_Es un programa que simula ser una computadora real_
+
+- **Host**: computadora real donde se instala la VM
+- **Guest**: computadora simulada por software (es la VM)
+- e.g. VMware, **VirtualBox**, QEMU, KVM
+
+### Usos comunes
+
+- Server Virtualization
+- Software Development
+
+### VirtualBox
+
+La [VM de la materia](https://drive.google.com/drive/folders/1Q--pFw8lvSP6ZtjpPE6TD_Fit-MzFRX9?usp=sharing) ya tiene todo instalado, **no hace falta instalarle nada**
+
+???
+
+- Tiene su propio sistema operativo, completamente aislado del host.
+- Para el sistema operativo en el guest, la VM es una computadora real
+
+---
+
+class: center, middle
+# Prohibido el uso de Windows en esta materia!
+
+---
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+		</textarea>
+		<script src="../out/remark.js"></script>
+		<!--
+		<script src="../out/MathJax-2.4-latest/MathJax.js"></script>
+		-->
+		<script type="text/javascript">
+			var slideshow = remark.create({
+				ratio: '16:9',
+				highlightLines:'true'
+			});
+
+			MathJax.Hub.Config({
+				extensions: ["tex2jax.js"],
+				jax: ["input/TeX","output/SVG"],
+				tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+			});
+
+			MathJax.Hub.Configured();
+		</script>
+	</body>
+</html>
