@@ -1,0 +1,559 @@
+# Go and Databases
+An Introduction
+
+Prof. Hernán Rondelli
+Bases de Datos II ― UCES
+
+*rondelli.github.io/uces/db2/go.html*
+
+## What is Go?
+
+## What is Go?
+
+  - Created at Google by Ken Thompson, Rob Pike, and Robert Griesemer
+  - Compiled
+  - Garbage Collected
+
+.image img/gopher.png
+.caption Gopher
+
+## C family
+
+Go
+
+.play src/for.go /START OMIT/,/STOP OMIT/
+
+C
+
+.code src/for.c /START OMIT/,/STOP OMIT/
+
+_maaasoomeeeno…_
+
+## Family tree
+
+  - ALGOL60
+  - Pascal → Modula-2 → Oberon → Oberon-2
+  - CPS → Squeak → Newsqueak → Alef
+  - C
+
+**"C + Pascal + Concurrency"**
+
+## Hello, world!
+
+Code
+
+.play src/hello.go
+
+Compile and Run
+
+	$ go run hello.go
+
+Code formatting
+
+	$ gofmt -d hello.go
+	$ gofmt -w hello.go
+
+## Data Types
+
+  - Basic types: `int`, `float`, `complex`, `boolean`, `string`, `rune`
+
+  - Composite types: `arrays`, `slices`, `maps`, `structs`
+
+  - Reference types: `pointers`, `slices`, `maps`, `functions`
+
+  - Interface types
+
+## Basic Types
+
+Declarations
+
+	var i int
+	var x float64
+	var z complex128
+	var ok bool
+	var s string
+	var c rune
+
+Declarations with type inference
+
+	var i  = 0
+	var x  = 0.0
+	var z  = 0 + 0i
+
+	var (
+		ok = true
+		s  = "hello"
+		c  = '😸'
+	)
+
+## Short Variable Declarations
+
+	i := 0
+	x := 0.0
+	z := 0 + 0i
+	ok := true
+	s := "hello"
+	c := '😸'
+
+## Composite types
+
+Array
+
+	var a [5]int
+	b := [5]int{0, 2, 4, 6, 8}
+
+Slice
+
+	var s0 []int
+	s1 := []int{1, 2, 3}
+
+Map
+
+	var m map[string]int
+
+…
+
+## Composite types: structs
+
+**privado**
+
+	type punto struct {
+		x, y int
+	}
+
+**Público**
+
+	type Persona struct {
+		Nombre   string
+		Apellido string
+		Edad     int
+	}
+
+**🤔**
+
+	type Cuenta struct {
+		númeroDeCuenta int
+		monto          float64
+	}
+
+## Pointers
+
+	var i *int
+	j := new(int)
+
+	k := 3.14
+	p := &k
+
+## Functions
+
+.play src/add_sub.go /START OMIT/,
+
+//\* More Declarations
+
+//	var a [10]\*int
+//	var b \*[10]int
+//	var c [10]map[string]int
+//	var d []map[func(int) int]\*struct{x, y int}
+
+## if
+
+.play src/if.go
+
+if with initialization statement
+
+.play src/if-init.go /START OMIT/,/STOP OMIT/
+
+## for …
+
+C–like
+
+.play src/for-c.go
+
+## for …
+
+while–like
+
+.play src/for-while.go
+
+## for range
+
+for each–like
+
+.play src/for-for-each.go
+
+## Si se declara se usa
+
+## Error: Declared and not used
+
+No se puede dejar cosas sin usar, si se declara se usa
+
+.code src/not_used.go
+
+## Blank identifier
+
+.play src/blank_identifier.go
+
+## Data input
+
+.code src/input.go
+
+## Time format
+
+Magic date: `2006-01-02T15:04:05`
+
+.play src/time1.go
+.play src/time2.go /START OMIT/,/STOP OMIT/
+.play src/time3.go /START OMIT/,/STOP OMIT/
+.play src/time4.go /START OMIT/,/STOP OMIT/
+
+// Output
+
+//2018-06-21 18:39:07.132136526 -0300 -03 m=+0.000336585
+//21/06/2018
+//hoy es 21 del 06 de 2018
+//2018-06-21T18:39:07
+
+## Time example
+
+.play src/clock.go /START OMIT/,
+
+## More info
+
+// - Get started with Go → [golang.org/doc/tutorial/getting-started](https://golang.org/doc/tutorial/getting-started)
+// - Documentation → [golang.org/doc](https://golang.org/doc)
+
+  - Get started with Go
+
+.link https://golang.org/doc/tutorial/getting-started
+
+  - Documentation
+
+.link https://golang.org/doc
+
+## Relational Databases in Go
+
+## Relational Databases in Go …
+
+// Is go get deprecated?
+// Install PostgreSQL driver
+//
+// 	$ go get github.com/lib/pq
+
+Import declarations
+
+	package main
+
+	import (
+		"database/sql"
+		"fmt"
+		_ "github.com/lib/pq"
+		"log"
+	)
+
+	func main() {
+		// acá va el código de mi "aplicacion-de-bases-de-datos"
+	}
+
+## … Relational Databases in Go …
+
+Open database connection
+
+.code src/sql.go /B OPEN OMIT/,/E OPEN OMIT/
+
+## … Relational Databases in Go …
+
+Create table
+
+.code src/sql.go /B CREATE TABLE OMIT/,/E CREATE TABLE OMIT/
+
+Insert into
+
+.code src/sql.go /B INSERT INTO TABLE OMIT/,/E INSERT INTO TABLE OMIT/
+
+## … Relational Databases in Go
+
+.code src/sql.go /B ALUMNO OMIT/,/E ALUMNO OMIT/
+
+Query
+
+.code src/sql.go /B SELECT OMIT/,/E SELECT OMIT/
+
+## Complete example …
+
+.code src/sql.go ,/B CREATEDATABASE OMIT
+
+…
+
+## … Complete example …
+
+.code src/sql.go /B CREATEDATABASE OMIT/,/E CREATEDATABASE OMIT/
+
+…
+
+## … Complete example …
+
+.code src/sql.go /func main/,/E INSERT INTO TABLE OMIT/
+
+…
+
+## … Complete example
+
+.code src/sql.go /E INSERT INTO TABLE OMIT/,
+
+## Relational Databases in Go
+
+Creating module
+
+	$ mkdir aplicacion-de-bases-de-datos
+	$ cd aplicacion-de-bases-de-datos
+	$ go mod init aplicacion-de-bases-de-datos
+	go: creating new go.mod: module aplicacion-de-bases-de-datos
+
+Writing code
+
+	$ vi main.go
+
+Adding dependencies
+
+	$ go mod tidy
+	go: finding module for package github.com/lib/pq
+	go: found github.com/lib/pq in github.com/lib/pq v1.10.2
+
+Running code
+
+	$ go run .
+
+## JSON
+
+// empty title
+## 
+
+.image img/jason1.jpg _ 850
+.caption *JSON*
+
+// empty title
+## 
+
+.image img/jason2.jpg _ 500
+.caption *JSON*
+
+// empty title
+## 
+
+.image img/jason3.jpg _ 768
+.caption *JSON*
+
+// empty title
+## 
+
+.image img/jason4.jpg _ 800
+.caption *JSON*
+
+// empty title
+## 
+
+.image img/jason5.jpg _ 700
+.caption *JSON*
+
+## JSON
+
+  - JSON (JavaScript Object Notation)
+  - Structured information
+  - Standard, universal support
+  - Simple
+  - Strings, numbers, booleans, arrays, and objects
+
+## JSON data types to Go data types
+
+  - JSON numbers → Go int's and float's
+
+	626
+	-273.15
+
+  - JSON booleans → Go booleans
+
+	false
+	true
+
+  - JSON strings → Go strings
+
+	"Viva Perón"
+
+  - JSON arrays → Go arrays, and slices
+
+	["Viva", "Perón"]
+
+## JSON data types to Go data types
+
+  - JSON objects → Go structs
+
+	{
+	    "Title": "Casablanca",
+	    "released": 1942,
+	    "Actors": [
+	        "Humphrey Bogart",
+	        "Ingrid Bergman"
+	    ]
+	}
+
+## JSON Document
+
+`movies.json`
+
+	[
+	    {
+	        "Title": "Casablanca",
+	        "released": 1942,
+	        "Actors": [
+	            "Humphrey Bogart",
+	            "Ingrid Bergman"
+	        ]
+	    },
+	    {
+	        "Title": "Lilo & Stitch",
+	        "released": 2002,
+	        "color": true,
+	        "Actors": [
+	            "Chris Sanders"
+	        ]
+	    }
+	]
+
+## Encoding and Decoding JSON
+
+  - Marshalling (encoding)
+
+Go → JSON
+
+  - Unmarshalling (decoding)
+
+JSON → Go
+
+## JSON example …
+
+.code src/json.go /package /,/Cristina OMIT
+
+**…**
+
+## … JSON example
+
+.play src/json.go /Cristina OMIT/,/END OMIT
+
+## NoSQL Databases in Go
+
+## NoSQL Databases in Go (BoltDB)
+
+  - key/value store
+  - Embedded (no service)
+  - Database: **filename.db**
+
+//- Bucket ≈ `map[key]value`
+- Bucket: **key → value**
+
+// Install BoltDB library
+
+//	$ go get github.com/coreos/bbolt/...
+//	$ go get go.etcd.io/bbolt/...
+
+## Buckets
+
+key → value
+
+**alumne:**
+
+	1 → {"legajo": 1, "nombre": "Cristina", "apellido": "Kirchner"}
+	2 → {"legajo": 2, "nombre": "Diego Armando", "apellido": "Maradona"}
+	3 → {"legajo": 3, "nombre": "Juan Carlos", "apellido": "Olave"}
+
+## BoltDB
+
+Características
+
+  - Permite una única transacción de read/write (rw)
+  - Permite muchas transacciones read only (ro)
+
+## BoltDB
+
+Import declarations
+
+	package main
+
+	import (
+		"fmt"
+		"log"
+		bolt "go.etcd.io/bbolt"
+	)
+
+	func main() {
+		db, err := bolt.Open("guaraní.db", 0600, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+
+		//...
+	}
+
+## Write to buckets
+
+.code src/bolt.go /CREATE OMIT/,/READUNIQUE OMIT/
+
+## Read from buckets
+
+.code src/bolt.go /READUNIQUE OMIT/,
+
+## Full code …
+
+.code src/bolt.go ,/FUNC OMIT/
+
+## … Full code …
+
+.code src/bolt.go /CREATE OMIT/,/READUNIQUE OMIT/
+
+## … Full code …
+
+.code src/bolt.go /READUNIQUE OMIT/,
+
+## … Full code
+
+.code src/bolt.go /FUNC OMIT/,/CREATE OMIT/
+
+## NoSQL Databases in Go (BoltDB)
+
+Creating module
+
+	$ mkdir sui-guarani
+	$ cd sui-guarani
+	$ go mod init sui-guarani
+	go: creating new go.mod: module sui-guarani
+
+Writing code
+
+	$ vi app-boltdb.go
+
+Adding dependencies
+
+	$ go mod tidy
+	go: finding module for package go.etcd.io/bbolt
+	go: found go.etcd.io/bbolt in go.etcd.io/bbolt v1.3.6
+
+Running code
+
+	$ go run .
+
+## One more thing…
+
+## More info
+
+  - PostgreSQL documentation
+
+.link https://www.postgresql.org/docs/current
+
+  - BoltDB documentation
+
+.link https://pkg.go.dev/go.etcd.io/bbolt
+
+// empty title
+## 
+
+.image img/questions.png
