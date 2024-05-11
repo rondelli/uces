@@ -261,16 +261,16 @@ Weaker to Stronger:
 
 | <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> | 
 |:----------------------|:-:|----------------------------------
-| <span style=color:red>1. `read uncommitted`</span> |  | ↓  Overhead
-| <span style=color:orange>2. `read committed`</span>   |  | ↑ Concurrency
-| <span style=color:#F4BC1C>3. `repeatable read`</span>  | | ↓ Consistencia
+| <span style=color:red>1. `read uncommitted`</span> |     | ↓ + Overhead
+| <span style=color:orange>2. `read committed`</span>   |  | ↓ &#8722; Concurrency
+| <span style=color:#F4BC1C>3. `repeatable read`</span>  | | ↓ + Consistencia
 
 
 | <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> | 
 |:----------------------|-|----------------------------------
-| <span style=color:green>4. `serializable`</span>     | | ➕ Overhead
-|                       | | ➖ Concurrency
-|                       | | 100% Consistencia
+| <span style=color:green>4. `serializable`</span>     | | **> Overhead**
+|                       | | **< Concurrency**
+|                       | | <span style="background-color:green;color:white">100% Consistencia</span>
 
 ---
 
