@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://localhost:3999/go.slide#1 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Go and Databases</title>
+    
+    <script>
+      var notesEnabled =  false ;
+    </script>
+    <script src="./go_files/slides.js"></script>
+
+    
+
+    <script>
+      
+      if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+        var _gaq = _gaq || [];
+        _gaq.push(["_setAccount", "UA-11222381-6"]);
+        _gaq.push(["b._setAccount", "UA-49880327-6"]);
+        window.trackPageview = function() {
+          _gaq.push(["_trackPageview", location.pathname+location.hash]);
+          _gaq.push(["b._trackPageview", location.pathname+location.hash]);
+        };
+        window.trackPageview();
+        window.trackEvent = function(category, action, opt_label, opt_value, opt_noninteraction) {
+          _gaq.push(["_trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+          _gaq.push(["b._trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
+        };
+      }
+    </script>
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1"><meta name="apple-mobile-web-app-capable" content="yes"></head>
+
+  <body style="display: none" class="loaded">
+
+    <section class="slides layout-widescreen" style="transform: scale(0.798667);">
+
+      <article class="current">
+        <h1>Go and Databases</h1>
+        <h3>An Introduction</h3>
+        
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Prof. Hernán Rondelli
+  </p>
+  
+
+  
+  <p>
+    Bases de Datos II ― UCES
+  </p>
+  
+
+          </div>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    <b>rondelli.github.io/uces/db2/go.html</b>
+  </p>
+  
+
+          </div>
+        
+      </article>
+
+  
+  
+      <article class="next">
+      
+        <h2>What is Go?</h2>
+      
+      <span class="pagenumber">2</span>
+      </article>
+  
+  
+  
+      <article class="far-next">
+      
+        <h3>What is Go?</h3>
+        <ul>
+<li>Created at Google by Ken Thompson, Rob Pike, and Robert Griesemer</li>
+<li>Compiled</li>
+<li>Garbage Collected</li>
+</ul>
+
+<div class="image">
+  <img src="./go_files/gopher.png">
+</div>
+<figcaption>Gopher</figcaption>
+      
+      <span class="pagenumber">3</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>C family</h3>
+        <p>Go</p>
+
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+func main() {
+</span></pre><pre><span num="7">    for i := 0; i &lt; 10; i++ {</span>
+<span num="8">        fmt.Printf("%d\n", i)</span>
+<span num="9">    }</span>
+</pre>
+<pre style="display: none"><span>}
+</span></pre></div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+<p>C</p>
+
+  <div class="code">
+<pre><span num="5">    for (int i = 0; i &lt; 10; i++) {</span>
+<span num="6">        printf("%d\n", i);</span>
+<span num="7">    }</span>
+</pre>
+</div>
+<p><em>maaasoomeeeno…</em></p>
+
+      
+      <span class="pagenumber">4</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Family tree</h3>
+        <ul>
+<li>ALGOL60</li>
+<li>Pascal → Modula-2 → Oberon → Oberon-2</li>
+<li>CPS → Squeak → Newsqueak → Alef</li>
+<li>C</li>
+</ul>
+<p><strong>"C + Pascal + Concurrency"</strong></p>
+
+      
+      <span class="pagenumber">5</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Hello, world!</h3>
+        <p>Code</p>
+
+  <div class="code playground">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import "fmt"</span>
+<span num="4"></span>
+<span num="5">func main() {</span>
+<span num="6">    fmt.Printf("Hello, world!\n")</span>
+<span num="7">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+<p>Compile and Run</p>
+<pre><code>$ go run hello.go
+</code></pre>
+<p>Code formatting</p>
+<pre><code>$ gofmt -d hello.go
+$ gofmt -w hello.go</code></pre>
+
+      
+      <span class="pagenumber">6</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Data Types</h3>
+        <ul>
+<li>
+<p>Basic types: <code>int</code>, <code>float</code>, <code>complex</code>, <code>boolean</code>, <code>string</code>, <code>rune</code></p>
+</li>
+<li>
+<p>Composite types: <code>arrays</code>, <code>slices</code>, <code>maps</code>, <code>structs</code></p>
+</li>
+<li>
+<p>Reference types: <code>pointers</code>, <code>slices</code>, <code>maps</code>, <code>functions</code></p>
+</li>
+<li>
+<p>Interface types</p>
+</li>
+</ul>
+
+      
+      <span class="pagenumber">7</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Basic Types</h3>
+        <p>Declarations</p>
+<pre><code>var i int
+var x float64
+var z complex128
+var ok bool
+var s string
+var c rune
+</code></pre>
+<p>Declarations with type inference</p>
+<pre><code>var i  = 0
+var x  = 0.0
+var z  = 0 + 0i
+
+var (
+    ok = true
+    s  = "hello"
+    c  = '😸'
+)</code></pre>
+
+      
+      <span class="pagenumber">8</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Short Variable Declarations</h3>
+        <pre><code>i := 0
+x := 0.0
+z := 0 + 0i
+ok := true
+s := "hello"
+c := '😸'</code></pre>
+
+      
+      <span class="pagenumber">9</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Composite types</h3>
+        <p>Array</p>
+<pre><code>var a [5]int
+b := [5]int{0, 2, 4, 6, 8}
+</code></pre>
+<p>Slice</p>
+<pre><code>var s0 []int
+s1 := []int{1, 2, 3}
+</code></pre>
+<p>Map</p>
+<pre><code>var m map[string]int
+</code></pre>
+<p>…</p>
+
+      
+      <span class="pagenumber">10</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Composite types: structs</h3>
+        <p><strong>privado</strong></p>
+<pre><code>type punto struct {
+    x, y int
+}
+</code></pre>
+<p><strong>Público</strong></p>
+<pre><code>type Persona struct {
+    Nombre   string
+    Apellido string
+    Edad     int
+}
+</code></pre>
+<p><strong>🤔</strong></p>
+<pre><code>type Cuenta struct {
+    númeroDeCuenta int
+    monto          float64
+}</code></pre>
+
+      
+      <span class="pagenumber">11</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Pointers</h3>
+        <pre><code>var i *int
+j := new(int)
+
+k := 3.14
+p := &amp;k</code></pre>
+
+      
+      <span class="pagenumber">12</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Functions</h3>
+        
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+</span></pre><pre><span num="6">func Add(i, j int) int {</span>
+<span num="7">    return i + j</span>
+<span num="8">}</span>
+<span num="9"></span>
+<span num="10">func AddAndSub(i, j int) (int, int) {</span>
+<span num="11">    return i + j, i - j</span>
+<span num="12">}</span>
+<span num="13"></span>
+<span num="14">func AddSubAndDiv(i int, j int, k float64) (int, int, float64) {</span>
+<span num="15">    return i + j, i - j, float64(i) / k</span>
+<span num="16">}</span>
+<span num="17"></span>
+<span num="18">func main() {</span>
+<span num="19">    a, b := AddAndSub(3, 5)</span>
+<span num="20">    fmt.Printf("%d %d\n", a, b)</span>
+<span num="21"></span>
+<span num="22">    c, _ := AddAndSub(8, 2)</span>
+<span num="23">    fmt.Printf("%d\n", c)</span>
+<span num="24"></span>
+<span num="25">    _, _, x := AddSubAndDiv(1, 3, 2)</span>
+<span num="26">    fmt.Printf("%f\n", x)</span>
+<span num="27">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">13</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>if</h3>
+        
+  <div class="code playground">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import "fmt"</span>
+<span num="4"></span>
+<span num="5">func main() {</span>
+<span num="6">    n := 626</span>
+<span num="7">    if n == 626 {</span>
+<span num="8">        fmt.Printf("Viva Perón\n")</span>
+<span num="9">    } else {</span>
+<span num="10">        fmt.Printf("Aguante Cristina\n")</span>
+<span num="11">    }</span>
+<span num="12">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+<p>if with initialization statement</p>
+
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import "fmt"
+
+func main() {
+</span></pre><pre><span num="7">    a := 629</span>
+<span num="8">    if b := 626; a == b {</span>
+<span num="9">        fmt.Printf("Viva Perón\n")</span>
+<span num="10">    } else {</span>
+<span num="11">        fmt.Printf("Aguante Cristina\n")</span>
+<span num="12">    }</span>
+</pre>
+<pre style="display: none"><span>}
+</span></pre></div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">14</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>for …</h3>
+        <p>C–like</p>
+
+  <div class="code playground">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "fmt"</span>
+<span num="5">)</span>
+<span num="6"></span>
+<span num="7">func main() {</span>
+<span num="8">    n := 10</span>
+<span num="9">    for i := 0; i &lt; n; i++ {</span>
+<span num="10">        fmt.Printf("%d\n", i)</span>
+<span num="11">    }</span>
+<span num="12">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">15</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>for …</h3>
+        <p>while–like</p>
+
+  <div class="code playground">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "fmt"</span>
+<span num="5">)</span>
+<span num="6"></span>
+<span num="7">func main() {</span>
+<span num="8">    n := 10</span>
+<span num="9"></span>
+<span num="10">    i := 0</span>
+<span num="11">    for i &lt; n {</span>
+<span num="12">        fmt.Printf("%d\n", i)</span>
+<span num="13">        i++</span>
+<span num="14">    }</span>
+<span num="15">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">16</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>for range</h3>
+        <p>for each–like</p>
+
+  <div class="code playground">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "fmt"</span>
+<span num="5">)</span>
+<span num="6"></span>
+<span num="7">func main() {</span>
+<span num="8">    a := [4]int{626, 629, 625, 624}</span>
+<span num="9"></span>
+<span num="10">    for k, v := range a {</span>
+<span num="11">        fmt.Printf("%d %d\n", k, v)</span>
+<span num="12">    }</span>
+<span num="13">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">17</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>Si se declara se usa</h2>
+      
+      <span class="pagenumber">18</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Error: Declared and not used</h3>
+        <p>No se puede dejar cosas sin usar, si se declara se usa</p>
+
+  <div class="code">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "fmt"</span>
+<span num="5">    <b>"os"</b></span>
+<span num="6">)</span>
+<span num="7"></span>
+<span num="8">func main() {</span>
+<span num="9">    <b>a := 626</b></span>
+<span num="10">    fmt.Printf("Hello, world!\n")</span>
+<span num="11">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">19</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Blank identifier</h3>
+        
+  <div class="code playground">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "fmt"</span>
+<span num="5">    _ "os"</span>
+<span num="6">)</span>
+<span num="7"></span>
+<span num="8">func main() {</span>
+<span num="9">    a := 626</span>
+<span num="10">    _ = a</span>
+<span num="11">    fmt.Printf("Hello, world!\n")</span>
+<span num="12">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">20</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Data input</h3>
+        
+  <div class="code">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "fmt"</span>
+<span num="5">)</span>
+<span num="6"></span>
+<span num="7">func main() {</span>
+<span num="8">    var nombre string</span>
+<span num="9"></span>
+<span num="10">    fmt.Printf("Ingresá tu nombre: ")</span>
+<span num="11">    <b>fmt.Scanf("%s", &amp;nombre)</b></span>
+<span num="12"></span>
+<span num="13">    fmt.Printf("Hola, %s!\n", nombre)</span>
+<span num="14">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">21</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Time format</h3>
+        <p>Magic date: <code>2006-01-02T15:04:05</code></p>
+
+  <div class="code playground">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "fmt"</span>
+<span num="5">    "time"</span>
+<span num="6">)</span>
+<span num="7"></span>
+<span num="8">func main() {</span>
+<span num="9">    fmt.Println(time.Now())</span>
+<span num="10">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+</span></pre><pre><span num="10">    fmt.Println(time.Now().Format("02/01/2006"))</span>
+</pre>
+<pre style="display: none"><span>}
+</span></pre></div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+</span></pre><pre><span num="10">    fmt.Println(time.Now().Format("hoy es 2 del 1 de 2006"))</span>
+</pre>
+<pre style="display: none"><span>}
+</span></pre></div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+</span></pre><pre><span num="10">    fmt.Println(time.Now().Format("2006-01-02T15:04:05"))</span>
+</pre>
+<pre style="display: none"><span>}
+</span></pre></div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">22</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Time example</h3>
+        
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import (
+	"fmt"
+	"time"
+)
+
+</span></pre><pre><span num="9">func main() {</span>
+<span num="10">    go hello5()</span>
+<span num="11">    go hello10()</span>
+<span num="12"></span>
+<span num="13">    // var s string</span>
+<span num="14">    // fmt.Scanf("%s", s)</span>
+<span num="15">    time.Sleep(30 * time.Second)</span>
+<span num="16">}</span>
+<span num="17"></span>
+<span num="18">func hello5() {</span>
+<span num="19">    for {</span>
+<span num="20">        fmt.Printf("%v: Viva Perón!\n", time.Now().Format("15:04:05"))</span>
+<span num="21">        time.Sleep(5 * time.Second)</span>
+<span num="22">    }</span>
+<span num="23">}</span>
+<span num="24"></span>
+<span num="25">func hello10() {</span>
+<span num="26">    for {</span>
+<span num="27">        fmt.Printf("%v: Aguante Cristina!\n", time.Now().Format("15:04:05"))</span>
+<span num="28">        time.Sleep(10 * time.Second)</span>
+<span num="29">    }</span>
+<span num="30">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">23</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>More info</h3>
+        <ul>
+<li>Get started with Go</li>
+</ul>
+<p class="link"><a href="https://golang.org/doc/tutorial/getting-started" target="_blank">golang.org/doc/tutorial/getting-started</a></p><ul>
+<li>Documentation</li>
+</ul>
+<p class="link"><a href="https://golang.org/doc" target="_blank">golang.org/doc</a></p>
+      
+      <span class="pagenumber">24</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>Relational Databases in Go</h2>
+      
+      <span class="pagenumber">25</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Relational Databases in Go …</h3>
+        <p>Import declarations</p>
+<pre><code>package main
+
+import (
+    "database/sql"
+    "fmt"
+    _ "github.com/lib/pq"
+    "log"
+)
+
+func main() {
+    // acá va el código de mi "aplicacion-de-bases-de-datos"
+}</code></pre>
+
+      
+      <span class="pagenumber">26</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Relational Databases in Go …</h3>
+        <p>Open database connection</p>
+
+  <div class="code">
+<pre><span num="21">    db,err := sql.Open("postgres", "user=lucifer host=localhost dbname=postgres sslmode=disable")</span>
+<span num="22">    if err != nil {</span>
+<span num="23">        log.Fatal(err)</span>
+<span num="24">    }</span>
+<span num="25">    defer db.Close()</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">27</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Relational Databases in Go …</h3>
+        <p>Create table</p>
+
+  <div class="code">
+<pre><span num="46">    _, err = db.Exec(`create table alumne (legajo int, nombre text, apellido text)`)</span>
+<span num="47">    if err != nil {</span>
+<span num="48">        log.Fatal(err)</span>
+<span num="49">    }</span>
+</pre>
+</div>
+<p>Insert into</p>
+
+  <div class="code">
+<pre><span num="53">    _, err = db.Exec(`insert into alumne values (1, 'Cristina', 'Kirchner');</span>
+<span num="54">                      insert into alumne values (2, 'Juan Domingo', 'Perón');`)</span>
+<span num="55"></span>
+<span num="56">    if err != nil {</span>
+<span num="57">        log.Fatal(err)</span>
+<span num="58">    }</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">28</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Relational Databases in Go</h3>
+        
+  <div class="code">
+<pre><span num="11">type alumne struct {</span>
+<span num="12">    legajo           int</span>
+<span num="13">    nombre, apellido string</span>
+<span num="14">}</span>
+</pre>
+</div>
+<p>Query</p>
+
+  <div class="code">
+<pre><span num="62">    rows, err := db.Query(`select * from alumne`)</span>
+<span num="63">    if err != nil {</span>
+<span num="64">        log.Fatal(err)</span>
+<span num="65">    }</span>
+<span num="66">    defer rows.Close()</span>
+<span num="67">    var a alumne</span>
+<span num="68">    for rows.Next() {</span>
+<span num="69">        if err := rows.Scan(&amp;a.legajo, &amp;a.nombre, &amp;a.apellido); err != nil {</span>
+<span num="70">            log.Fatal(err)</span>
+<span num="71">        }</span>
+<span num="72">        fmt.Printf("%v %v %v\n", a.legajo, a.nombre, a.apellido)</span>
+<span num="73">    }</span>
+<span num="74">    if err = rows.Err(); err != nil {</span>
+<span num="75">        log.Fatal(err)</span>
+<span num="76">    }</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">29</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Complete example …</h3>
+        
+  <div class="code">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "database/sql"</span>
+<span num="5">    "fmt"</span>
+<span num="6">    _ "github.com/lib/pq"</span>
+<span num="7">    "log"</span>
+<span num="8">)</span>
+<span num="9"></span>
+<span num="11">type alumne struct {</span>
+<span num="12">    legajo           int</span>
+<span num="13">    nombre, apellido string</span>
+<span num="14">}</span>
+</pre>
+</div>
+<p>…</p>
+
+      
+      <span class="pagenumber">30</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Complete example …</h3>
+        
+  <div class="code">
+<pre><span num="19">func createDatabase() {</span>
+<span num="21">    db,err := sql.Open("postgres", "user=lucifer host=localhost dbname=postgres sslmode=disable")</span>
+<span num="22">    if err != nil {</span>
+<span num="23">        log.Fatal(err)</span>
+<span num="24">    }</span>
+<span num="25">    defer db.Close()</span>
+<span num="27"></span>
+<span num="28">    _, err = db.Exec(`create database guarani`)</span>
+<span num="29">    if err != nil {</span>
+<span num="30">        log.Fatal(err)</span>
+<span num="31">    }</span>
+<span num="32">}</span>
+</pre>
+</div>
+<p>…</p>
+
+      
+      <span class="pagenumber">31</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Complete example …</h3>
+        
+  <div class="code">
+<pre><span num="36">func main() {</span>
+<span num="37">    createDatabase()</span>
+<span num="38"></span>
+<span num="39">    db, err := sql.Open("postgres", "user=lucifer host=localhost dbname=guarani sslmode=disable")</span>
+<span num="40">    if err != nil {</span>
+<span num="41">        log.Fatal(err)</span>
+<span num="42">    }</span>
+<span num="43">    defer db.Close()</span>
+<span num="44"></span>
+<span num="46">    _, err = db.Exec(`create table alumne (legajo int, nombre text, apellido text)`)</span>
+<span num="47">    if err != nil {</span>
+<span num="48">        log.Fatal(err)</span>
+<span num="49">    }</span>
+<span num="51"></span>
+<span num="53">    _, err = db.Exec(`insert into alumne values (1, 'Cristina', 'Kirchner');</span>
+<span num="54">                      insert into alumne values (2, 'Juan Domingo', 'Perón');`)</span>
+<span num="55"></span>
+<span num="56">    if err != nil {</span>
+<span num="57">        log.Fatal(err)</span>
+<span num="58">    }</span>
+</pre>
+</div>
+<p>…</p>
+
+      
+      <span class="pagenumber">32</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Complete example</h3>
+        
+  <div class="code">
+<pre><span num="62">    rows, err := db.Query(`select * from alumne`)</span>
+<span num="63">    if err != nil {</span>
+<span num="64">        log.Fatal(err)</span>
+<span num="65">    }</span>
+<span num="66">    defer rows.Close()</span>
+<span num="67">    var a alumne</span>
+<span num="68">    for rows.Next() {</span>
+<span num="69">        if err := rows.Scan(&amp;a.legajo, &amp;a.nombre, &amp;a.apellido); err != nil {</span>
+<span num="70">            log.Fatal(err)</span>
+<span num="71">        }</span>
+<span num="72">        fmt.Printf("%v %v %v\n", a.legajo, a.nombre, a.apellido)</span>
+<span num="73">    }</span>
+<span num="74">    if err = rows.Err(); err != nil {</span>
+<span num="75">        log.Fatal(err)</span>
+<span num="76">    }</span>
+<span num="78">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">33</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Relational Databases in Go</h3>
+        <p>Creating module</p>
+<pre><code>$ mkdir aplicacion-de-bases-de-datos
+$ cd aplicacion-de-bases-de-datos
+$ go mod init aplicacion-de-bases-de-datos
+go: creating new go.mod: module aplicacion-de-bases-de-datos
+</code></pre>
+<p>Writing code</p>
+<pre><code>$ vi main.go
+</code></pre>
+<p>Adding dependencies</p>
+<pre><code>$ go mod tidy
+go: finding module for package github.com/lib/pq
+go: found github.com/lib/pq in github.com/lib/pq v1.10.2
+</code></pre>
+<p>Running code</p>
+<pre><code>$ go run .</code></pre>
+
+      
+      <span class="pagenumber">34</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>JSON</h2>
+      
+      <span class="pagenumber">35</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./go_files/jason1.jpg" width="850">
+</div>
+<figcaption><b>JSON</b></figcaption>
+      
+      <span class="pagenumber">36</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./go_files/jason2.jpg" width="500">
+</div>
+<figcaption><b>JSON</b></figcaption>
+      
+      <span class="pagenumber">37</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./go_files/jason3.jpg" width="768">
+</div>
+<figcaption><b>JSON</b></figcaption>
+      
+      <span class="pagenumber">38</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./go_files/jason4.jpg" width="800">
+</div>
+<figcaption><b>JSON</b></figcaption>
+      
+      <span class="pagenumber">39</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./go_files/jason5.jpg" width="700">
+</div>
+<figcaption><b>JSON</b></figcaption>
+      
+      <span class="pagenumber">40</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>JSON</h3>
+        <ul>
+<li>JSON (JavaScript Object Notation)</li>
+<li>Structured information</li>
+<li>Standard, universal support</li>
+<li>Simple</li>
+<li>Strings, numbers, booleans, arrays, and objects</li>
+</ul>
+
+      
+      <span class="pagenumber">41</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>JSON data types to Go data types</h3>
+        <ul>
+<li>
+<p>JSON numbers → Go int's and float's</p>
+<p>626
+-273.15</p>
+</li>
+<li>
+<p>JSON booleans → Go booleans</p>
+<p>false
+true</p>
+</li>
+<li>
+<p>JSON strings → Go strings</p>
+<p>"Viva Perón"</p>
+</li>
+<li>
+<p>JSON arrays → Go arrays, and slices</p>
+<p>["Viva", "Perón"]</p>
+</li>
+</ul>
+
+      
+      <span class="pagenumber">42</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>JSON data types to Go data types</h3>
+        <ul>
+<li>
+<p>JSON objects → Go structs</p>
+<p>{
+"Title": "Casablanca",
+"released": 1942,
+"Actors": [
+"Humphrey Bogart",
+"Ingrid Bergman"
+]
+}</p>
+</li>
+</ul>
+
+      
+      <span class="pagenumber">43</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>JSON Document</h3>
+        <p><code>movies.json</code></p>
+<pre><code>[
+    {
+        "Title": "Casablanca",
+        "released": 1942,
+        "Actors": [
+            "Humphrey Bogart",
+            "Ingrid Bergman"
+        ]
+    },
+    {
+        "Title": "Lilo &amp; Stitch",
+        "released": 2002,
+        "color": true,
+        "Actors": [
+            "Chris Sanders"
+        ]
+    }
+]</code></pre>
+
+      
+      <span class="pagenumber">44</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Encoding and Decoding JSON</h3>
+        <ul>
+<li>Marshalling (encoding)</li>
+</ul>
+<p>Go → JSON</p>
+<ul>
+<li>Unmarshalling (decoding)</li>
+</ul>
+<p>JSON → Go</p>
+
+      
+      <span class="pagenumber">45</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>JSON example …</h3>
+        
+  <div class="code">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "encoding/json"</span>
+<span num="5">    "fmt"</span>
+<span num="6">    "log"</span>
+<span num="7">)</span>
+<span num="8"></span>
+<span num="9">// Sólo se marshalean los fields públicos</span>
+<span num="10">type Movie struct {</span>
+<span num="11">    Title  string</span>
+<span num="12">    Year   int  `json:"released"`</span>
+<span num="13">    Color  bool `json:"color,omitempty"`</span>
+<span num="14">    Actors []string</span>
+<span num="15">}</span>
+</pre>
+</div>
+<p><strong>…</strong></p>
+
+      
+      <span class="pagenumber">46</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… JSON example</h3>
+        
+  <div class="code playground">
+<pre style="display: none"><span>package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+)
+
+// Sólo se marshalean los fields públicos
+type Movie struct {
+	Title  string
+	Year   int  `json:"released"`
+	Color  bool `json:"color,omitempty"`
+	Actors []string
+}
+
+</span></pre><pre><span num="18">func main() {</span>
+<span num="19">    movies := []Movie{</span>
+<span num="20">        {Title: "Casablanca", Year: 1942, Color: false,</span>
+<span num="21">            Actors: []string{"Humphrey Bogart", "Ingrid Bergman"}},</span>
+<span num="22">        {Title: "Lilo &amp; Stitch", Year: 2002, Color: true,</span>
+<span num="23">            Actors: []string{"Chris Sanders"}},</span>
+<span num="24">    }</span>
+<span num="25">    fmt.Printf("%v\n", movies)</span>
+<span num="26"></span>
+<span num="27">    data, err := json.MarshalIndent(movies, "", "    ") //data, err := json.Marshal(movies)</span>
+<span num="28">    if err != nil {</span>
+<span num="29">        log.Fatalf("JSON marshalling failed: %s", err)</span>
+<span num="30">    }</span>
+<span num="31">    fmt.Printf("%s\n", data)</span>
+<span num="32"></span>
+<span num="33">    var películas []Movie</span>
+<span num="34">    err = json.Unmarshal(data, &amp;películas)</span>
+<span num="35">    if err != nil {</span>
+<span num="36">        log.Fatalf("JSON unmarshalling failed: %s", err)</span>
+<span num="37">    }</span>
+<span num="38">    fmt.Printf("%v\n", películas)</span>
+<span num="39">}</span>
+</pre>
+</div><div class="buttons"><button class="run">Run</button></div><div class="ui-resizable output" style="display: none;"><div class="ui-resizable-handle ui-resizable-n" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-w" style="z-index: 90; display: block;"></div><div class="ui-resizable-handle ui-resizable-nw" style="z-index: 90; display: block;"></div><div class="buttons"><button class="run">Run</button><button class="kill">Kill</button><button class="close">Close</button></div><pre></pre></div>
+
+      
+      <span class="pagenumber">47</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>NoSQL Databases in Go</h2>
+      
+      <span class="pagenumber">48</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>NoSQL Databases in Go (BoltDB)</h3>
+        <ul>
+<li>
+<p>key/value store</p>
+</li>
+<li>
+<p>Embedded (no service)</p>
+</li>
+<li>
+<p>Database: <strong>filename.db</strong></p>
+</li>
+<li>
+<p>Bucket: <strong>key → value</strong></p>
+</li>
+</ul>
+
+      
+      <span class="pagenumber">49</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Buckets</h3>
+        <p>key → value</p>
+<p><strong>alumne:</strong></p>
+<pre><code>1 → {"legajo": 1, "nombre": "Cristina", "apellido": "Kirchner"}
+2 → {"legajo": 2, "nombre": "Diego Armando", "apellido": "Maradona"}
+3 → {"legajo": 3, "nombre": "Juan Carlos", "apellido": "Olave"}</code></pre>
+
+      
+      <span class="pagenumber">50</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>BoltDB</h3>
+        <p>Características</p>
+<ul>
+<li>Permite una única transacción de read/write (rw)</li>
+<li>Permite muchas transacciones read only (ro)</li>
+</ul>
+
+      
+      <span class="pagenumber">51</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>BoltDB</h3>
+        <p>Import declarations</p>
+<pre><code>package main
+
+import (
+    "fmt"
+    "log"
+    bolt "go.etcd.io/bbolt"
+)
+
+func main() {
+    db, err := bolt.Open("guaraní.db", 0600, nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    //...
+}</code></pre>
+
+      
+      <span class="pagenumber">52</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Write to buckets</h3>
+        
+  <div class="code">
+<pre><span num="45">func CreateUpdate(db *bolt.DB, bucketName string, key []byte, val []byte) error {</span>
+<span num="46">    // abre transacción de escritura</span>
+<span num="47">    tx, err := db.Begin(true)</span>
+<span num="48">    if err != nil {</span>
+<span num="49">        return err</span>
+<span num="50">    }</span>
+<span num="51">    defer tx.Rollback()</span>
+<span num="52"></span>
+<span num="53">    b, _ := tx.CreateBucketIfNotExists([]byte(bucketName))</span>
+<span num="54"></span>
+<span num="55">    err = b.Put(key, val)</span>
+<span num="56">    if err != nil {</span>
+<span num="57">        return err</span>
+<span num="58">    }</span>
+<span num="59"></span>
+<span num="60">    // cierra transacción</span>
+<span num="61">    if err := tx.Commit(); err != nil {</span>
+<span num="62">        return err</span>
+<span num="63">    }</span>
+<span num="64"></span>
+<span num="65">    return nil</span>
+<span num="66">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">53</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Read from buckets</h3>
+        
+  <div class="code">
+<pre><span num="70">func ReadUnique(db *bolt.DB, bucketName string, key []byte) ([]byte, error) {</span>
+<span num="71">    var buf []byte</span>
+<span num="72"></span>
+<span num="73">    // abre una transacción de lectura</span>
+<span num="74">    err := db.View(func(tx *bolt.Tx) error {</span>
+<span num="75">        b := tx.Bucket([]byte(bucketName))</span>
+<span num="76">        buf = b.Get(key)</span>
+<span num="77">        return nil</span>
+<span num="78">    })</span>
+<span num="79"></span>
+<span num="80">    return buf, err</span>
+<span num="81">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">54</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>Full code …</h3>
+        
+  <div class="code">
+<pre><span num="1">package main</span>
+<span num="2"></span>
+<span num="3">import (</span>
+<span num="4">    "encoding/json"</span>
+<span num="5">    "fmt"</span>
+<span num="6">    bolt "go.etcd.io/bbolt"</span>
+<span num="7">    "log"</span>
+<span num="8">    "strconv"</span>
+<span num="9">)</span>
+<span num="10"></span>
+<span num="11">type Alumne struct {</span>
+<span num="12">    Legajo   int</span>
+<span num="13">    Nombre   string</span>
+<span num="14">    Apellido string</span>
+<span num="15">}</span>
+<span num="16"></span>
+<span num="17">//...</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">55</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Full code …</h3>
+        
+  <div class="code">
+<pre><span num="45">func CreateUpdate(db *bolt.DB, bucketName string, key []byte, val []byte) error {</span>
+<span num="46">    // abre transacción de escritura</span>
+<span num="47">    tx, err := db.Begin(true)</span>
+<span num="48">    if err != nil {</span>
+<span num="49">        return err</span>
+<span num="50">    }</span>
+<span num="51">    defer tx.Rollback()</span>
+<span num="52"></span>
+<span num="53">    b, _ := tx.CreateBucketIfNotExists([]byte(bucketName))</span>
+<span num="54"></span>
+<span num="55">    err = b.Put(key, val)</span>
+<span num="56">    if err != nil {</span>
+<span num="57">        return err</span>
+<span num="58">    }</span>
+<span num="59"></span>
+<span num="60">    // cierra transacción</span>
+<span num="61">    if err := tx.Commit(); err != nil {</span>
+<span num="62">        return err</span>
+<span num="63">    }</span>
+<span num="64"></span>
+<span num="65">    return nil</span>
+<span num="66">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">56</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Full code …</h3>
+        
+  <div class="code">
+<pre><span num="70">func ReadUnique(db *bolt.DB, bucketName string, key []byte) ([]byte, error) {</span>
+<span num="71">    var buf []byte</span>
+<span num="72"></span>
+<span num="73">    // abre una transacción de lectura</span>
+<span num="74">    err := db.View(func(tx *bolt.Tx) error {</span>
+<span num="75">        b := tx.Bucket([]byte(bucketName))</span>
+<span num="76">        buf = b.Get(key)</span>
+<span num="77">        return nil</span>
+<span num="78">    })</span>
+<span num="79"></span>
+<span num="80">    return buf, err</span>
+<span num="81">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">57</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>… Full code</h3>
+        
+  <div class="code">
+<pre><span num="21">//...</span>
+<span num="22"></span>
+<span num="23">func main() {</span>
+<span num="24">    db, err := bolt.Open("guaraní.db", 0600, nil)</span>
+<span num="25">    if err != nil {</span>
+<span num="26">        log.Fatal(err)</span>
+<span num="27">    }</span>
+<span num="28">    defer db.Close()</span>
+<span num="29"></span>
+<span num="30">    cristina := Alumne{1, "Cristina", "Kirchner"}</span>
+<span num="31">    data, err := json.Marshal(cristina)</span>
+<span num="32">    if err != nil {</span>
+<span num="33">        log.Fatal(err)</span>
+<span num="34">    }</span>
+<span num="35"></span>
+<span num="36">    CreateUpdate(db, "alumne", []byte(strconv.Itoa(cristina.Legajo)), data)</span>
+<span num="37"></span>
+<span num="38">    resultado, err := ReadUnique(db, "alumne", []byte(strconv.Itoa(cristina.Legajo)))</span>
+<span num="39"></span>
+<span num="40">    fmt.Printf("%s\n", resultado)</span>
+<span num="41">}</span>
+</pre>
+</div>
+
+      
+      <span class="pagenumber">58</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>NoSQL Databases in Go (BoltDB)</h3>
+        <p>Creating module</p>
+<pre><code>$ mkdir sui-guarani
+$ cd sui-guarani
+$ go mod init sui-guarani
+go: creating new go.mod: module sui-guarani
+</code></pre>
+<p>Writing code</p>
+<pre><code>$ vi app-boltdb.go
+</code></pre>
+<p>Adding dependencies</p>
+<pre><code>$ go mod tidy
+go: finding module for package go.etcd.io/bbolt
+go: found go.etcd.io/bbolt in go.etcd.io/bbolt v1.3.6
+</code></pre>
+<p>Running code</p>
+<pre><code>$ go run .</code></pre>
+
+      
+      <span class="pagenumber">59</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h2>One more thing…</h2>
+      
+      <span class="pagenumber">60</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3>More info</h3>
+        <ul>
+<li>PostgreSQL documentation</li>
+</ul>
+<p class="link"><a href="https://www.postgresql.org/docs/current" target="_blank">www.postgresql.org/docs/current</a></p><ul>
+<li>BoltDB documentation</li>
+</ul>
+<p class="link"><a href="https://pkg.go.dev/go.etcd.io/bbolt" target="_blank">pkg.go.dev/go.etcd.io/bbolt</a></p>
+      
+      <span class="pagenumber">61</span>
+      </article>
+  
+  
+  
+      <article>
+      
+        <h3></h3>
+        
+<div class="image">
+  <img src="./go_files/questions.png">
+</div>
+
+      
+      <span class="pagenumber">62</span>
+      </article>
+  
+  
+
+      <article>
+        <h3>Thank you</h3>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    Prof. Hernán Rondelli
+  </p>
+  
+
+  
+  <p>
+    Bases de Datos II ― UCES
+  </p>
+  
+
+          </div>
+        
+          <div class="presenter">
+            
+  
+  <p>
+    <b>rondelli.github.io/uces/db2/go.html</b>
+  </p>
+  
+
+          </div>
+        
+      </article>
+
+    <div class="slide-area" id="prev-slide-area"></div><div class="slide-area" id="next-slide-area"></div></section>
+
+    <div id="help" style="display: none;">
+      Use the left and right arrow keys or click the left and right
+      edges of the page to navigate between slides.<br>
+      (Press 'H' or navigate to hide this message.)
+    </div>
+
+    
+    <script src="./go_files/play.js"></script>
+    
+
+    <script>
+      (function() {
+        
+        if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
+          var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;
+          ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+          var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
+        }
+      })();
+    </script>
+  
+
+<link rel="stylesheet" type="text/css" href="./go_files/css"><link rel="stylesheet" type="text/css" href="./go_files/styles.css"></body></html>
