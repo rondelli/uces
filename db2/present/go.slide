@@ -485,7 +485,7 @@ Import declarations
 	)
 
 	func main() {
-		db, err := bolt.Open("guaraní.db", 0600, nil)
+		db, err := bolt.Open("miuces.db", 0600, nil)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -522,10 +522,10 @@ Import declarations
 
 Creating module
 
-	$ mkdir sui-guarani
-	$ cd sui-guarani
-	$ go mod init sui-guarani
-	go: creating new go.mod: module sui-guarani
+	$ mkdir mi-uces
+	$ cd mi-uces
+	$ go mod init mi-uces
+	go: creating new go.mod: module mi-uces
 
 Writing code
 
