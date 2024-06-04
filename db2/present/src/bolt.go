@@ -21,7 +21,7 @@ type Alumne struct {
 //...
 
 func main() {
-	db, err := bolt.Open("guaraní.db", 0600, nil)
+	db, err := bolt.Open("mi-uces.db", 0600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
