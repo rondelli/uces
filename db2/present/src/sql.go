@@ -25,7 +25,7 @@ func createDatabase() {
 	defer db.Close()
 	//E OPEN OMIT
 
-	_, err = db.Exec(`create database guarani`)
+	_, err = db.Exec(`create database miuces;`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,14 +36,14 @@ func createDatabase() {
 func main() {
 	createDatabase()
 
-	db, err := sql.Open("postgres", "user=lucifer host=localhost dbname=guarani sslmode=disable")
+	db, err := sql.Open("postgres", "user=lucifer host=localhost dbname=miuces sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
 	//B CREATE TABLE OMIT
-	_, err = db.Exec(`create table alumne (legajo int, nombre text, apellido text)`)
+	_, err = db.Exec(`create table alumne (legajo int, nombre text, apellido text);`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +59,7 @@ func main() {
 	//E INSERT INTO TABLE OMIT
 
 	//B SELECT OMIT
-	rows, err := db.Query(`select * from alumne`)
+	rows, err := db.Query(`select * from alumne;`)
 	if err != nil {
 		log.Fatal(err)
 	}
