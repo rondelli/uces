@@ -1,0 +1,147 @@
+= Bases de Datos II: Prácticas
+v1, {docdate}
+:toc-title: Contenidos
+:toc: left
+:tabsize: 4
+:icons: font
+:source-highlighter: coderay
+:note-caption: Nota
+:figure-caption: Figura
+:table-caption: Tabla
+:pdf-page-size: A4
+:pdf-page-margin: [3cm, 3cm, 3cm, 3cm]
+
+== Práctica 3
+
+=== Parte I: SQL
+
+1. Dadas las siguientes relaciones, resolver mediante queries en SQL.
++
+bote([underline]#bid#, nombre, color)
++
+marine([underline]#mid#, nombre, puntaje, f_inscripcion)
++
+alquiler([underline]#bid, mid, fecha#)
++
+reserva([underline]#bid, mid, fecha#)
+
+a. Obtener los nombres de los botes rojos.
+
+b. Obtener los nombres de les marines que se inscribieron después del
+2011-06-26.
+
+c. Obtener los nombres de les marines que se inscribieron durante el año
+2012.
+
+d. Obtener los bid's de los botes alquilados por le marine número 3.
+
+e. Obtener los nombres de les marines que alquilaron el bote "Macross".
+
+f. Obtener los nombres de les marines que alquilaron botes rojos.
+
+g. Obtener los botes reservados para el 2011-06-26.
+
+h. Obtener los botes disponibles para alquilar el 2011-06-26.
+(usar subqueries)
+
+i. Obtener los nombres de les marines que no alquilaron ningún bote.
+(usar subqueries)
+
+j. Obtener los nombres de les marines que alquilaron al menos dos botes.
+(usar `group by`)
+
+k. Obtener los nombres de les marines que alquilaron sólo un bote.
+(usar `group by`)
+
+l. Obtener los nombres de les marines que alquilaron todos los botes.
+(usar división)
+
+m. Obtener los nombres de les marines que alquilaron todos los botes
+verdes.
+(usar división)
+
+n. Obtener las fechas en que hay botes reservados.
+
+o. Obtener las fechas en que están reservados todos los botes.
+(usar división)
+
+2. Dadas las siguientes relaciones
++
+gusta(bebedore, cerveza)
++
+frecuenta(bebedore, bar)
++
+sirve(bar, cerveza)
++
+--
+Suponer que:
+
+- Todas las cervezas son servidas en al menos un bar.
+
+- Todes les bebedores frecuentan al menos un bar, y les gusta al menos
+una cerveza.
+
+- Todos los bares sirven al menos una cerveza.
+--
++
+Obtener mediante SQL, utilizando los statements vistos en clase:
+
+a. Los nombres de todos los bares.
+
+b. Los nombres de todes les bebedores.
+
+c. Las cervezas que le gustan a Barney y que son servidas en el bar
+Rockeria.
+
+d. Los bares que sirven todas las cervezas que le gustan a Misato
+Katsuragi.
+
+e. Los bares que sirven todas las cervezas que le gustan a Misato
+Katsuragi y a Ritsuko Akagi.
+
+// Este ejercicio es muuucho muy rebuscado, mejor lo sacamos.
+//f. Les bebedores que van a bares que sólo sirven cervezas que les
+//gustan.
+
+=== Parte II: No hay.
+
+== Práctica 4
+
+=== Parte I: Stored Procedures
+
+1. Escribir una función que se llame `buscar_alumne()`, y que reciba un
+número de legajo, y que devuelva el nombre y apellido de le alumne.
+
+2. Escribir una función, `reservar_bote()`, que reciba como parámetros,
+un `mid`, un `bid`, y una `fecha`, y que realice una reserva. Si el bote
+solicitado no estuviera libre, se debe buscar otro bote libre del mismo
+color y reservarlo. Suponer que siempre existe algún bote libre.
+
+3. Escribir una función, `alquilaste_todos()` que reciba el `mid` de une
+marine y que diga si alquiló todos los botes (`true` ó `false`).
+
+4. Escribir una función, `materia_cursada_por_todes()`, que devuelva el
+código de la materia cursada por todes les alumnes. Suponer que existe
+una única materia que cumple lo solicitado.
+
+5. Escribir una función `bares_con_cervezas_para_ambes()` que reciba dos
+bebedores y que muestre los bares que sirven todas las cervezas que le
+gustan a ambes bebedores.
+
+=== Parte II: Triggers
+
+1. Cada vez que se inserte une nueve bebedore en la tabla frecuenta, se
+debe insertar a ese bebedore en la tabla gusta, asociade a la cerveza
+Quilmes.
+
+2. Si une marine tiene puntaje mayor ó igual a 100, se deben ingresar
+todos sus datos en una nueva tabla marine_top con el mismo schema que la
+tabla marine. El trigger debe dispararse tanto para insert, como para
+update.
+
+3. Cada vez que une marine alquile un barco, debe borrarse el registro
+de la tabla reserva. Se supone que todes les marines primero reservan el
+barco, y después lo alquilan.
+
+4. Cada vez que une marine alquile todos los botes, insertar su datos en
+la tabla cliente_vip (si todavía no está insertado en esa tabla).
