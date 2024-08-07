@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Presentation</title>
+		<link href="favicon.png" rel="icon" type="image/png"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<style type="text/css">
+			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+			@import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+			body, p { font-family: 'Nunito'; font-size: 21px; }
+			h1, h2, h3 {
+				font-family: 'Yanone Kaffeesatz';
+				font-weight: normal;
+			}
+			.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+class: center, middle
+# Presentación de la materia
+
+## Sistemas Operativos ― UCES
+
+<br/>
+<br/>
+
+### Prof. Hernán Rondelli
+
+### https://rondelli.github.io/uces/os/intro.html
+
+---
+
+## Medios de comunicación
+
+  - Cuestiones administrativas, por email
+  - Avisos, por el **grupo de Telegram**
+
+---
+
+## Bibliografía sugerida
+
+- Andrew S. Tanenbaum, Modern Operating Systems
+- Abraham Silberschatz et al, Operating System Concepts: Essentials
+- Brian Kernighan and Rob Pike, The Unix Programming Environment
+- Evi Nemeth et al., UNIX and Linux System Administration Handbook
+- William Shotts, The Linux Command Line
+- Rusty Russell, Filesystem Hierarchy Standard
+
+---
+
+## Programa de la materia
+
+|                    |   |
+|-------------------:|---|:-----------
+|       Introducción | → | Definición de sistema operativo, evolución, tipos.
+|        Filesystems | → | Definición, tipos, archivos, directorios, permisos.
+|           Procesos | → | Definición, scheduling, comunicación entre procesos.
+|            Memoria | → | Conceptos, memoria virtual, memoria física, swapping.
+|       Input/Output | → | Conceptos, file descriptors, block devices, character devices.
+| Administración de Sistemas Unix | → | Tareas básicas de administración, instalación, configuración.
+|    Shell scripting | → | La terminal, comandos, shells, programación.
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+_El programa completo de la materia está [aquí](https://docs.google.com/document/d/137Rg34Pg1gO_CKLTiKX7aWSxTL96ZXBTVDM534lLyDs/edit?usp=sharing)._
+
+---
+
+## Régimen de aprobación
+
+|                             | |                           |
+| ---------------------------:|-|:---------------------------
+| **1<sup>er</sup> parcial**  |→| Sistemas Operativos, Filesystems. **(escrito)**
+| **2<sup>do</sup> parcial**  |→| Todos los temas. Énfasis en shell scripting. **(escrito)**
+| **trabajo práctico**        |→| Todos los temas. Énfasis en administración de sistemas Unix. **(grupal)**
+| **final**                   |→| Todos los temas. Teórico. **(oral)**
+
+---
+
+class: center, middle
+# Virtual Machine
+
+---
+
+## VM (Virtual Machine)
+
+_Es un programa que simula ser una computadora real_
+
+|         |   |                                             |
+|--------:|---|:--------------------------------------------|
+|  _Host_ | → | computadora real donde se instala la VM
+| _Guest_ | → | computadora simulada por software (es la VM)
+
+- Server Virtualization
+- Software Development
+- e.g. VMware, **VirtualBox**, QEMU, KVM
+
+La [VM de la materia](https://drive.google.com/drive/folders/1Q--pFw8lvSP6ZtjpPE6TD_Fit-MzFRX9?usp=sharing) ya tiene todo instalado, **no hace falta instalarle nada**
+
+???
+
+- Tiene su propio sistema operativo, completamente aislado del host.
+- Para el sistema operativo en el guest, la VM es una computadora real
+
+---
+
+class: center, middle
+# Prohibido el uso de Windows en esta materia!
+
+---
+
+class: center, middle
+# Introducción
+## Conceptos fundamentales
+
+---
+
+class: center, middle
+# Qué es un sistema operativo?
+
+---
+
+## Definición
+
+Un **sistema operativo** es un programa [ó conjunto de programas] que:
+
+- virtualiza el hardware y provee una capa de abstracción lógica
+
+- se encarga de controlar el hardware: administrar la memoria, I/O, etc.
+
+- brinda los mecanismos para la comunicación entre los procesos
+
+---
+
+class: center, middle
+# Evolución de los sistemas operativos
+
+---
+
+## Evolución de los sistemas operativos
+
+- 1940, 1950: Mainframes sin sistemas operativos
+
+- 1960: Proto sistemas operativos: ejecutivos/monitores
+
+- 1970: Time-sharing: Unix
+
+- actualidad: Unix, Linux
+
+---
+
+class: center, middle
+# Tipos de sistemas operativos
+
+---
+
+## Tipos de sistemas operativos
+### Cuántas cosas al mismo tiempo
+
+- monotarea
+- multitarea
+
+---
+
+## Tipos de sistemas operativos
+### Cuántes usuaries al mismo tiempo
+
+- monousuario
+- multiusuario
+
+---
+
+## Características necesarias en el hardware
+
+Arquitectura i386 
+
+- memory management
+- paging
+- segmentation
+- task switching in hardware
+
+---
+
+class: center, middle
+# Linux: Unix for the i386 PC
+
+---
+
+## Componentes mínimos de un sistema operativo
+
+- kernel (kernel space)
+- shell
+- userland (user space, apps)
+
+---
+
+class: center, middle
+# Arquitectura de un sistema operativo
+
+---
+
+## Arquitectura de un sistema operativo
+
+- kernel monolítico: todo el sistema operativo se ejecuta en kernel space
+
+- microkernel: administración de memoria, y comunicación entre procesos en kernel space 
+
+---
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+		</textarea>
+		<script src="../out/remark.js"></script>
+		<!--
+		<script src="../out/MathJax-2.4-latest/MathJax.js"></script>
+		-->
+		<script type="text/javascript">
+			var slideshow = remark.create({
+				ratio: '16:9',
+				highlightLines:'true'
+			});
+
+			MathJax.Hub.Config({
+				extensions: ["tex2jax.js"],
+				jax: ["input/TeX","output/SVG"],
+				tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+			});
+
+			MathJax.Hub.Configured();
+		</script>
+	</body>
+</html>
