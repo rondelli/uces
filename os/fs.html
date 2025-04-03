@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Presentation</title>
+		<link href="favicon.png" rel="icon" type="image/png"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<style type="text/css">
+			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+			@import url(https://fonts.googleapis.com/css?family=Nunito:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+			body, p { font-family: 'Nunito'; font-size: 21px; }
+			h1, h2, h3 {
+				font-family: 'Yanone Kaffeesatz';
+				font-weight: normal;
+			}
+			.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 21px; }
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+class: center, middle
+# Filesystems
+
+## Sistemas Operativos — UCES
+
+<br/>
+<br/>
+
+### Prof. Hernán Rondelli
+
+### https://rondelli.github.io/uces/os/fs.html
+
+---
+
+# Agenda
+
+1. Filesystems
+2. Tipos de filesystems
+
+---
+
+class: center, middle
+# Filesystem
+
+---
+
+## Filesystem (FS)
+
+- Módulo del sistema operativo
+- Estructura de datos
+- Forma de guardar, acceder, y organizar archivos
+
+???
+
+A filesystem is a method of structuring data that an operating system
+uses to control how data is stored and retrieved. It organizes files
+and directories to ensure adequate allocation of space on the device. 
+
+In more detail, a filesystem defines how files are named, stored, and
+retrieved from a storage device. Every time you open a file on your
+computer or smart device, your operating system uses its filesystem
+internally to load it from the storage device. Or when you copy, edit,
+or delete a file, the filesystem handles it under the hood. 
+
+Without a filesystem, the storage device would contain a big chunk of
+data stored back to back, and the operating system wouldn't be able to
+tell them apart. The term filesystem takes its name from the old
+paper-based data management systems, where we kept documents as files
+and put them into directories.
+
+A filesystem isn't just a bookkeeping feature, though. Space management,
+metadata, data encryption, file access control, and data integrity are
+the responsibilities of the filesystem too. Everything begins with
+partitioning. Storage devices must be partitioned and formatted before
+the first use. Partitioning is splitting a storage device into several
+logical regions, so they can be managed separately as if they are
+separate storage devices.
+
+There are many filesystem designs and implementations – with various
+structure and features and various resulting characteristics such as
+speed, flexibility, security, size and more². Files systems have been
+developed for many types of storage devices, including hard disk drives
+(HDDs), solid-state drives (SSDs), magnetic tapes and optical discs². A
+portion of the computer main memory can be set up as a RAM disk that
+serves as a storage device for a filesystem².
+
+---
+
+## Partition
+
+Los medios de almacenamiento se dividen en particiones
+
+- MBR Partition Table
+- GPT (GUID Partition Table)
+
+---
+
+## Volume
+
+Se crea un filesystem dentro de una partición
+
+**Partition + FS**
+
+---
+
+class: center, middle
+# Qué es un archivo?
+
+---
+
+# Conceptos/Definiciones
+
+## Archivo
+
+* Secuencia de bytes
+* Tiene un nombre
+* inode
+
+## Directorio
+
+* es un archivo
+* contenedor de archivos y directorios
+* el punto . es el mismo directorio
+* .. es el directorio padre
+
+### También tenemos soft links y hard links
+
+---
+
+# Tipos de filesystems
+## Non journaling
+
+- vfat: filesystem de MS-DOS, se usa en flash storage
+- ext2: tradicional de Linux, basado en FFS
+- FFS: filesystem clásico de Unix
+
+---
+
+# Tipos de filesystems
+## Journaling
+
+- ext3 (Linux)
+- ext4 (Linux)
+- XFS (Linux)
+- HFS+ (macOS)
+
+---
+
+# Tipos de filesystems
+## COW (Copy On Write)
+
+- btrfs (Linux)
+- zfs (Linux, BSD, Unix)
+- apfs (macOS, iOS, iPadOS)
+- Snapshots
+
+---
+
+# Tipos de filesystems
+## Otros
+
+### Soft updates
+
+- ufs (FreeBSD, OpenBSD, NetBSD)
+
+### Logging
+
+- LFS (Log-Structured File System)
+
+### Network file systems
+
+- Samba, CIFS (Microsoft)
+- NFS (Unix)
+
+---
+
+# Tipos de filesystems
+
+### Tipos de medios de almacenamiento
+
+- Flash storage:
+	- Non journaling (vfat) ✅
+	- Journaling ❌
+	- Soft updates ❌
+	- COW ✅
+
+- Hard drives
+	- Journaling ✅
+	- Soft updates ✅
+
+---
+
+class: center, middle
+## Concepto fundamental en Unix
+
+# Todo es un archivo!
+
+---
+
+# Permisos de archivos
+
+- Unix permissions (rwx)
+- ACL, Access control lists (Linux, macOS)
+- File systems flags (BSD, macOS) 
+
+---
+
+## VFS and Low level
+
+- High level, abstracción: VFS (Virtual FileSystem)
+- Low level: cómo está implementado
+
+### Virtual file systems
+
+- /proc
+- /dev devfs
+- /tmp tmpfs
+- /sys
+
+---
+
+# Comandos
+
+
+* ls, cd, man
+* mkdir, touch, mv, rm, ln
+* mount, umount, fsck, sync
+* mke2fs, newfs
+* /etc/fstab
+* df -hT
+* lsblk
+* du -chs
+* cat /proc/partitions
+* cat /proc/cpuinfo
+
+???
+
+Estructura de archivos y directorios
+
+/bin, /sbin, /usr, /boot, /home, /etc,…
+
+---
+
+class: center, middle
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tc4ROCJYbm0?si=plHWf2Wjy-DBCl9Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+# AT&T Archives: The UNIX Operating System
+
+---
+
+class: center, middle
+
+.center[<img src="img/questions.png" alt="image" width="400"/>]
+
+		</textarea>
+		<script src="../out/remark.js"></script>
+		<!--
+		<script src="../out/MathJax-2.4-latest/MathJax.js"></script>
+		-->
+		<script type="text/javascript">
+			var slideshow = remark.create({
+				ratio: '16:9',
+				highlightLines:'true'
+			});
+
+			MathJax.Hub.Config({
+				extensions: ["tex2jax.js"],
+				jax: ["input/TeX","output/SVG"],
+				tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+			});
+
+			MathJax.Hub.Configured();
+		</script>
+	</body>
+</html>
