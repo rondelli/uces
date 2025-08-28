@@ -204,15 +204,17 @@ group by departamento;
 ## having
 
 ```sql
-select   departamento, avg(salario) 
-from     empleade 
-group by departamento 
+select   departamento, avg(salario)
+from     empleade
+group by departamento
 having   count(*) > 10;
 ```
 
 ???
 
-**having** sólo puede hacer referencia a funciones de agregación ó a campos que estén en el **group by**.
+**having** sólo puede hacer referencia a funciones de agregación ó a campos que
+estén en el **group by**.
+
 
 ---
 
@@ -222,20 +224,20 @@ having   count(*) > 10;
 select   departamento, count(*)
 from     empleade
 where    salario >= 40000
-group by departamento 
+group by departamento
 having   count(*) > 10;
 ```
 
 ```sql
-select  departamento, count(*) 
-from    empleade 
+select  departamento, count(*)
+from    empleade
 where   salario >= 40000 and departamento in (
 *       select   departamento
 *       from     empleade
 *       group by departamento
 *       having   count(*) > 10
 )
-group by departamento;  
+group by departamento;
 ```
 
 ---
