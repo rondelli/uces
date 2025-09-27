@@ -79,12 +79,12 @@ Si le cliente tenía $10000 en su cuenta, cuánto dinero tiene ahora?
 | Acceso A        | <span style=color:white>666</span> |  Acceso B |
 |:---------------:|-|:---------------:|
 | ↓               | | ↓               |
-| `read(saldo)`   | |                 | 
-| `saldo += 1000` | |                 | 
-|                 | | `read(saldo)`   | 
+| `read(saldo)`   | |                 |
+| `saldo += 1000` | |                 |
+|                 | | `read(saldo)`   |
 |                 | | `saldo += 2000` |
-| `write(saldo)`  | |                 | 
-|                 | | `write(saldo)`  | 
+| `write(saldo)`  | |                 |
+|                 | | `write(saldo)`  |
 
 ???
 
@@ -128,12 +128,12 @@ now()::date == current_date
 |------------------------------|------------------------------------|:----------:|
 | .center[↓]                   | |  ↓ |
 | `insert into alquiler`       | |
-| `select * from reserva`      | |                               
-| `where fecha = now()::date;` | |                               
+| `select * from reserva`      | |
+| `where fecha = now()::date;` | |
 |                              | | .left[`select count(*) from reserva;`]
 |                              | | .left[`select count(*) from alquiler;`]
-| `delete from reserva`        | |                              
-| `where fecha = now()::date;` | |                              
+| `delete from reserva`        | |
+| `where fecha = now()::date;` | |
 
 ???
 
@@ -204,7 +204,7 @@ Una transacción **nunca** deja a la base de datos en un estado **inconsistente*
 - Las transacciones se procesan concurrentemente
 - Los resultados de una transacción deben ser los mismos que la ejecución secuencial de las operaciones
 
-**Serialización:** Las operaciones se pueden entrelazar pero la ejecución debe ser equivalente a _algún_ orden secuencial de todas las transacciones 
+**Serialización:** Las operaciones se pueden entrelazar pero la ejecución debe ser equivalente a _algún_ orden secuencial de todas las transacciones
 
 ---
 
@@ -224,9 +224,9 @@ update caja_de_ahorro set saldo = saldo + 2000 where número_de_cuenta = 626;
 
 <br/>
 
-✅  T1, T2 
+✅  T1, T2
 
-✅  T2, T1 
+✅  T2, T1
 
 ---
 
@@ -247,7 +247,7 @@ class: center, middle
 - Las transacciones se procesan **concurrentemente**
 - Los resultados de una transacción **deben ser los mismos** que la ejecución secuencial de las operaciones
 
-**Serialización:** Las operaciones se pueden entrelazar pero la ejecución debe ser equivalente a _algún_ orden secuencial de todas las transacciones 
+**Serialización:** Las operaciones se pueden entrelazar pero la ejecución debe ser equivalente a _algún_ orden secuencial de todas las transacciones
 
 ✅  T1, T2, T3, T7, T10, T8, T9, T6, T4, T5
 
@@ -259,14 +259,14 @@ class: center, middle
 
 Weaker to Stronger:
 
-| <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> | 
+| <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> |
 |:----------------------|:-:|----------------------------------
 | <span style=color:red>1. `read uncommitted`</span> |     | ↓ + Overhead
 | <span style=color:orange>2. `read committed`</span>   |  | ↓ &#8722; Concurrency
 | <span style=color:#F4BC1C>3. `repeatable read`</span>  | | ↓ + Consistencia
 
 
-| <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> | 
+| <span style=color:white>66666666666666666</span> | <span style=color:white>lucifer</span> |
 |:----------------------|-|----------------------------------
 | <span style=color:green>4. `serializable`</span>     | | **> Overhead**
 |                       | | **< Concurrency**
@@ -387,6 +387,18 @@ set transaction isolation level repeatable read;
 select * from cambio;
 select avg(compra) from cambio;
 select max(compra) from cambio;
+commit;
+```
+---
+
+## serializable
+
+- **Garantiza serialización**
+
+```sql
+begin;
+set transaction isolation level serializable;
+/* operaciones */
 commit;
 ```
 
