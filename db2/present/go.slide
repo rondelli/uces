@@ -326,31 +326,31 @@ Running code
 ## JSON
 
 // empty title
-## 
+##
 
 .image img/jason1.jpg _ 850
 .caption *JSON*
 
 // empty title
-## 
+##
 
 .image img/jason2.jpg _ 500
 .caption *JSON*
 
 // empty title
-## 
+##
 
 .image img/jason3.jpg _ 768
 .caption *JSON*
 
 // empty title
-## 
+##
 
 .image img/jason4.jpg _ 800
 .caption *JSON*
 
 // empty title
-## 
+##
 
 .image img/jason5.jpg _ 700
 .caption *JSON*
@@ -385,16 +385,18 @@ Running code
 
 ## JSON data types to Go data types
 
-  - JSON objects → Go structs
+- JSON objects → Go structs
 
-	{
-	    "Title": "Casablanca",
-	    "released": 1942,
-	    "Actors": [
-	        "Humphrey Bogart",
-	        "Ingrid Bergman"
-	    ]
-	}
+```
+{
+    "Title": "Casablanca",
+    "released": 1942,
+    "Actors": [
+        "Humphrey Bogart",
+        "Ingrid Bergman"
+    ]
+}
+```
 
 ## JSON Document
 
@@ -554,6 +556,6 @@ Running code
 .link https://pkg.go.dev/go.etcd.io/bbolt
 
 // empty title
-## 
+##
 
 .image img/questions.png
